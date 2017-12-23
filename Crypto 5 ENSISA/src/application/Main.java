@@ -1,16 +1,9 @@
 package application;
 
-import javax.swing.*;
-
 public class Main {
 
 	public static void main(String[] args) {
-		JFrame window = new JFrame();
-
-		window.setTitle("WEEWOO WEEWOO");
-		window.setSize(400, 200);
-		window.setLocationRelativeTo(null);
-		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		Frame window = new Frame();
 		window.setVisible(true);
 	}
 
