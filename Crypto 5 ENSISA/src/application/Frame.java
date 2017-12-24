@@ -4,23 +4,28 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.io.File;
 
 public class Frame extends JFrame implements ActionListener {
 
     private final JMenuBar MENU_BAR = new JMenuBar();
-    private final JMenu FICHIER_MENU = new JMenu();
-    private final JMenuItem OUVRIR_MENU = new JMenuItem();
-    private final JMenuItem FERMER_MENU = new JMenuItem();
+    private final JMenu FICHIER_MENU = new JMenu("Fichier");
+    private final JMenuItem OUVRIR_MENU = new JMenuItem("Ouvrir");
+    private final JMenuItem FERMER_MENU = new JMenuItem("Fermer");
+    private final JMenu EDITION_MENU = new JMenu("Édition");
+    private final JMenuItem CRYPTER_MENU = new JMenuItem("Crypter");
     private final Panel panel = new Panel();
 
     private FileNameExtensionFilter extensionFilter;
 
     public Frame() {
         super();
+
         setFrameProperties();
         createMenuBar();
+
         extensionFilter = new FileNameExtensionFilter(".jpg, .jpeg, .png", "jpg", "jpeg", "png");
     }
 
@@ -39,22 +44,29 @@ public class Frame extends JFrame implements ActionListener {
     private void createMenuBar() {
         setJMenuBar(MENU_BAR);
 
-        createMenu(FICHIER_MENU, "Fichier");
-        createSubMenu(OUVRIR_MENU, "Ouvrir", FICHIER_MENU);
-        createSubMenu(FERMER_MENU, "Fermer", FICHIER_MENU);
+        createMenu(FICHIER_MENU);
+        createSubMenu(OUVRIR_MENU, FICHIER_MENU);
+        createSubMenu(FERMER_MENU, FICHIER_MENU);
 
+        createMenu(EDITION_MENU);
+        createSubMenu(CRYPTER_MENU, EDITION_MENU);
+
+        setKeyboardShortcuts();
         getContentPane().add(panel);
     }
 
-    private void createMenu(JMenu menu, String name) {
+    private void createMenu(JMenu menu) {
         MENU_BAR.add(menu);
-        menu.setText(name);
     }
 
-    private void createSubMenu(JMenuItem subMenu, String name, JMenu menu) {
+    private void createSubMenu(JMenuItem subMenu, JMenu menu) {
         menu.add(subMenu);
         subMenu.addActionListener(this);
-        subMenu.setText(name);
+    }
+
+    private void setKeyboardShortcuts() {
+        OUVRIR_MENU.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
+        FERMER_MENU.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK));
     }
 
     @Override
