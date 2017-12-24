@@ -26,7 +26,7 @@ public class Frame extends JFrame implements ActionListener {
         setFrameProperties();
         createMenuBar();
 
-        extensionFilter = new FileNameExtensionFilter(".jpg, .jpeg, .png", "jpg", "jpeg", "png");
+        extensionFilter = new FileNameExtensionFilter(".png", "png");
     }
 
     private void setFrameProperties() {
