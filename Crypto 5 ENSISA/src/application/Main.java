@@ -3,8 +3,11 @@ package application;
 public class Main {
 
 	public static void main(String[] args) {
-		Frame window = new Frame();
-		window.setVisible(true);
+		EncryptorModel model = new EncryptorModel();
+		EncryptorView view = new EncryptorView();
+		EncryptorController controller = new EncryptorController(model, view);
+
+		view.setVisible(true);
 	}
 
 }

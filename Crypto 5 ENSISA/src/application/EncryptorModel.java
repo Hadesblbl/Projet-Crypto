@@ -7,12 +7,16 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public class Panel extends JPanel {
+public class EncryptorModel extends JPanel {
 
-    protected BufferedImage image = null;
+    private BufferedImage image = null;
 
-    public Panel() {
+    EncryptorModel() {
         super();
+    }
+
+    public BufferedImage getImage() {
+        return image;
     }
 
     protected void paintComponent(Graphics g) {

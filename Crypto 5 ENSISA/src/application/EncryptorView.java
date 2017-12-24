@@ -8,7 +8,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.io.File;
 
-public class Frame extends JFrame implements ActionListener {
+public class EncryptorView extends JFrame implements ActionListener {
+
+    /*
+    * TODO: Implémentation d'ActionListener dans EncryptorController ?
+    * */
 
     private final JMenuBar MENU_BAR = new JMenuBar();
     private final JMenu FICHIER_MENU = new JMenu("Fichier");
@@ -16,18 +20,17 @@ public class Frame extends JFrame implements ActionListener {
     private final JMenuItem FERMER_MENU = new JMenuItem("Fermer");
     private final JMenu EDITION_MENU = new JMenu("Édition");
     private final JMenuItem CRYPTER_MENU = new JMenuItem("Crypter");
-    private final Panel panel = new Panel();
 
-    private FileNameExtensionFilter extensionFilter;
+    private final EncryptorModel encryptorModel = new EncryptorModel();
 
-    public Frame() {
+    EncryptorView() {
         super();
 
         setFrameProperties();
         createMenuBar();
-
-        extensionFilter = new FileNameExtensionFilter(".png", "png");
     }
+
+    /* --- Window frame ---*/
 
     private void setFrameProperties() {
         this.setTitle("Super projet de cryptographie");
@@ -37,7 +40,7 @@ public class Frame extends JFrame implements ActionListener {
     }
 
     private void resizeFrame() {
-        this.setSize(panel.image.getWidth() + 16, panel.image.getHeight() + 62);
+        this.setSize(encryptorModel.getImage().getWidth() + 16, encryptorModel.getImage().getHeight() + 62);
         this.setLocationRelativeTo(null);
     }
 
@@ -52,7 +55,7 @@ public class Frame extends JFrame implements ActionListener {
         createSubMenu(CRYPTER_MENU, EDITION_MENU);
 
         setKeyboardShortcuts();
-        getContentPane().add(panel);
+        getContentPane().add(encryptorModel);
     }
 
     private void createMenu(JMenu menu) {
@@ -69,6 +72,8 @@ public class Frame extends JFrame implements ActionListener {
         FERMER_MENU.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK));
     }
 
+    /* --- Action performed ---*/
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(OUVRIR_MENU)) {
@@ -80,9 +85,11 @@ public class Frame extends JFrame implements ActionListener {
 
     private void openFile() {
         JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter(".png", "png");
         fileChooser.setFileFilter(extensionFilter);
+
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
-            panel.addImage(new File(fileChooser.getSelectedFile().getAbsolutePath()));
+            encryptorModel.addImage(new File(fileChooser.getSelectedFile().getAbsolutePath()));
         resizeFrame();
     }
 
