@@ -106,11 +106,12 @@ public class EncryptorModel extends JPanel implements MouseListener, MouseMotion
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		  final Rectangle rect = new Rectangle((pmove.x > porig.x) ? porig.x : pmove.x, 
+		  final Rectangle rect = new Rectangle(
+				  (pmove.x > porig.x) ? porig.x : pmove.x, 
                   (pmove.y > porig.y) ? porig.y : pmove.y, 
-                  (pmove.x > porig.x) ? pmove.x - porig.x : porig.x 
-                          - pmove.x, (pmove.y > porig.y) ? pmove.y 
-                          - porig.y : porig.y - pmove.y);
+                  (pmove.x > porig.x) ? pmove.x - porig.x : porig.x - pmove.x,
+                  (pmove.y > porig.y) ? pmove.y - porig.y : porig.y - pmove.y
+          );
 	 
 		  System.out.println(rect.getX());
 		  System.out.println(rect.getY());
