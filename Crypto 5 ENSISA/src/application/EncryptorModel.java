@@ -13,7 +13,11 @@ import javax.imageio.ImageIO;
 
 public class EncryptorModel extends JPanel implements MouseListener, MouseMotionListener, ImageObserver{
 
-    private BufferedImage image = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7000404362747523378L;
+	private BufferedImage image = null;
     private Point porig = null; 
     private Point pmove = null; 
 
