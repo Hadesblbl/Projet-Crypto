@@ -2,21 +2,25 @@ package application;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.File;
 import java.nio.file.NoSuchFileException;
 
-class EncryptorController implements ActionListener {
+class EncryptorController implements ActionListener, MouseListener, MouseMotionListener {
 
     private EncryptorModel model;
     private EncryptorView view;
+
+    private Point p1 = null;
+    private Point p2 = null;
 
     EncryptorController(EncryptorModel model, EncryptorView view) {
         this.view = view;
         this.model = view.getEncryptorModel();
     }
+
+    /* Interaction menu */
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -38,11 +42,12 @@ class EncryptorController implements ActionListener {
         FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter(".png", "png");
         fileChooser.setFileFilter(extensionFilter);
 
-        if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
+        if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION)
             model.addImage(new File(fileChooser.getSelectedFile().getAbsolutePath()));
-            System.out.println(model.getImage());
-        }
+
         view.resizeFrame();
+        model.addMouseListener(this);
+        model.addMouseMotionListener(this);
     }
 
     private void exitFile() {
@@ -57,4 +62,33 @@ class EncryptorController implements ActionListener {
         }*/
     }
 
+    /* Interaction image */
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        model.update(p1, null);
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        p1 = e.getPoint();
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {}
+
+    @Override
+    public void mouseEntered(MouseEvent e) {}
+
+    @Override
+    public void mouseExited(MouseEvent e) {}
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        p2 = e.getPoint();
+        model.update(p1, p2);
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {}
 }

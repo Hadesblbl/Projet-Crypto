@@ -2,21 +2,17 @@ package application;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public class EncryptorModel extends JPanel implements MouseListener, MouseMotionListener, ImageObserver {
+public class EncryptorModel extends JPanel {
 
 	private static final long serialVersionUID = -7000404362747523378L;
 	private BufferedImage image = null;
-    private Point porig = null; 
-    private Point pmove = null; 
+    private Point p1 = null;
+    private Point p2 = null;
 
     EncryptorModel() {
         super();
@@ -28,68 +24,51 @@ public class EncryptorModel extends JPanel implements MouseListener, MouseMotion
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        final Graphics2D g2 = (Graphics2D) g; 
+
+        final Graphics2D g2 = (Graphics2D) g;
+        drawImage(g2);
+        drawSelectionRectangle(g2);
+  }
+
+    private void drawImage(Graphics2D g2) {
         if (image != null)
             g2.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), this);
-        if (pmove != null && porig != null) { 
-            g2.setColor(Color.BLACK); 
-            
-            // calcul de la selection 
-          final Rectangle rect = new Rectangle((pmove.x > porig.x) ? porig.x : pmove.x, 
-                            (pmove.y > porig.y) ? porig.y : pmove.y, 
-                            (pmove.x > porig.x) ? pmove.x - porig.x : porig.x 
-                                    - pmove.x, (pmove.y > porig.y) ? pmove.y 
-                                    - porig.y : porig.y - pmove.y); 
-            // dessine le fond de la selection avec un effet de transparence 
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f)); 
-            g2.fillRect(rect.x, rect.y, rect.width, rect.height); 
-            // suppression de la transparence pour dessiner la bordure 
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); 
-            g2.drawRect(rect.x, rect.y, rect.width, rect.height);  
     }
-    
-  }
+
+    private void drawSelectionRectangle(Graphics2D g2) {
+        if (p2 == null || p1 == null)
+            return;
+
+        g2.setColor(Color.BLACK);
+
+        // calcul de la selection
+        final Rectangle rect = new Rectangle((p2.x > p1.x) ? p1.x : p2.x,
+                (p2.y > p1.y) ? p1.y : p2.y,
+                (p2.x > p1.x) ? p2.x - p1.x : p1.x
+                        - p2.x, (p2.y > p1.y) ? p2.y
+                - p1.y : p1.y - p2.y);
+
+        // dessine le fond de la selection avec un effet de transparence
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f));
+        g2.fillRect(rect.x, rect.y, rect.width, rect.height);
+
+        // suppression de la transparence pour dessiner la bordure
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        g2.drawRect(rect.x, rect.y, rect.width, rect.height);
+    }
 
     protected void addImage(File imageFile) {
         try {
             image = ImageIO.read(imageFile);
-            porig = null; 
-            pmove = null;
-            addMouseListener(this); 
-            addMouseMotionListener(this); 
         } catch (IOException e) {
             e.printStackTrace();
         }
         repaint();
     }
 
-	@Override
-	public void mouseDragged(MouseEvent e) {
-        pmove = e.getPoint();
+    public void update(Point p1, Point p2) {
+        this.p1 = p1;
+        this.p2 = p2;
         repaint();
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-        pmove = null;
-        repaint();
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {}
-
-	@Override
-	public void mouseExited(MouseEvent e) {}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-        porig = e.getPoint();
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {}
-
+    }
 }
