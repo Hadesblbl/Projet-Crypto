@@ -65,51 +65,31 @@ public class EncryptorModel extends JPanel implements MouseListener, MouseMotion
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-        pmove = e.getPoint(); // récupération du point en déplacement
+        pmove = e.getPoint();
         repaint();
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
+	public void mouseMoved(MouseEvent e) {}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-        porig = e.getPoint(); // récupération du point d'origine
+        pmove = null;
         repaint();
 	}
 
+	@Override
+	public void mouseEntered(MouseEvent e) {}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
-		  final Rectangle rect = new Rectangle(
-				  (pmove.x > porig.x) ? porig.x : pmove.x, 
-                  (pmove.y > porig.y) ? porig.y : pmove.y, 
-                  (pmove.x > porig.x) ? pmove.x - porig.x : porig.x - pmove.x,
-                  (pmove.y > porig.y) ? pmove.y - porig.y : porig.y - pmove.y
-          );
+	public void mouseExited(MouseEvent e) {}
 
-		  System.out.println(rect.getX());
-		  System.out.println(rect.getY());
-		  System.out.println(rect.getWidth());
-		  System.out.println(rect.getHeight());
-		
+	@Override
+	public void mousePressed(MouseEvent e) {
+        porig = e.getPoint();
 	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {}
 
 }
