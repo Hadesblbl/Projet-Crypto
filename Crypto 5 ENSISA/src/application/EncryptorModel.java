@@ -11,11 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public class EncryptorModel extends JPanel implements MouseListener, MouseMotionListener, ImageObserver{
+public class EncryptorModel extends JPanel implements MouseListener, MouseMotionListener, ImageObserver {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = -7000404362747523378L;
 	private BufferedImage image = null;
     private Point porig = null; 
@@ -57,8 +54,7 @@ public class EncryptorModel extends JPanel implements MouseListener, MouseMotion
         try {
             image = ImageIO.read(imageFile);
             porig = null; 
-            pmove = null; 
-            // ajout des listeners 
+            pmove = null;
             addMouseListener(this); 
             addMouseMotionListener(this); 
         } catch (IOException e) {
@@ -69,42 +65,34 @@ public class EncryptorModel extends JPanel implements MouseListener, MouseMotion
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		 pmove = e.getPoint(); // récupération du point en déplacement 
-	        // repaint du composant 
-	        repaint(); 
-		
+        pmove = e.getPoint(); // récupération du point en déplacement
+        repaint();
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		 porig = e.getPoint(); // récupération du point d'origine 
-	        // repaint du composant 
-	        repaint(); 
-		
+        porig = e.getPoint(); // récupération du point d'origine
+        repaint();
 	}
 
 
@@ -116,13 +104,11 @@ public class EncryptorModel extends JPanel implements MouseListener, MouseMotion
                   (pmove.x > porig.x) ? pmove.x - porig.x : porig.x - pmove.x,
                   (pmove.y > porig.y) ? pmove.y - porig.y : porig.y - pmove.y
           );
-	 
+
 		  System.out.println(rect.getX());
 		  System.out.println(rect.getY());
 		  System.out.println(rect.getWidth());
 		  System.out.println(rect.getHeight());
-
-		
 		
 	}
 
