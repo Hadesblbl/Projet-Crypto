@@ -1,23 +1,15 @@
 package application;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-public class EncryptorView extends JFrame implements ActionListener {
+public class EncryptorView extends JFrame {
 
-    /*
-    * TODO: Implémentation d'ActionListener dans EncryptorController ?
-    * */
-
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 9055585013467848278L;
+
+	private List<JMenuItem> menuItems = new ArrayList<>();
 	private final JMenuBar MENU_BAR = new JMenuBar();
     private final JMenu FICHIER_MENU = new JMenu("Fichier");
     private final JMenuItem OUVRIR_MENU = new JMenuItem("Ouvrir");
@@ -29,13 +21,17 @@ public class EncryptorView extends JFrame implements ActionListener {
 
     EncryptorView() {
         super();
-
         setFrameProperties();
         createMenuBar();
     }
 
-    /* --- Window frame ---*/
+    public EncryptorModel getEncryptorModel() {
+        return encryptorModel;
+    }
 
+    /**
+     * Définit les propriétés de la fenêtre générée au lancement du programme
+     */
     private void setFrameProperties() {
         this.setTitle("Super projet de cryptographie");
         this.setSize(400, 200);
@@ -43,9 +39,13 @@ public class EncryptorView extends JFrame implements ActionListener {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
-    private void resizeFrame() {
-        this.setSize(encryptorModel.getImage().getWidth() + 16, encryptorModel.getImage().getHeight() + 62);
-        this.setLocationRelativeTo(null);
+    protected void resizeFrame() {
+        try {
+            this.setSize(encryptorModel.getImage().getWidth() + 16, encryptorModel.getImage().getHeight() + 62);
+            this.setLocationRelativeTo(null);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     private void createMenuBar() {
@@ -66,9 +66,9 @@ public class EncryptorView extends JFrame implements ActionListener {
         MENU_BAR.add(menu);
     }
 
-    private void createSubMenu(JMenuItem subMenu, JMenu menu) {
-        menu.add(subMenu);
-        subMenu.addActionListener(this);
+    private void createSubMenu(JMenuItem menu, JMenu parent) {
+        parent.add(menu);
+        menuItems.add(menu);
     }
 
     private void setKeyboardShortcuts() {
@@ -76,28 +76,9 @@ public class EncryptorView extends JFrame implements ActionListener {
         FERMER_MENU.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK));
     }
 
-    /* --- Action performed ---*/
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(OUVRIR_MENU)) {
-            openFile();
-        } else if (e.getSource().equals(FERMER_MENU)) {
-            exitFile();
-        }
+    public void addController(EncryptorController controller) {
+        for (JMenuItem item : menuItems)
+            item.addActionListener(controller);
     }
 
-    private void openFile() {
-        JFileChooser fileChooser = new JFileChooser();
-        FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter(".png", "png");
-        fileChooser.setFileFilter(extensionFilter);
-
-        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
-            encryptorModel.addImage(new File(fileChooser.getSelectedFile().getAbsolutePath()));
-        resizeFrame();
-    }
-
-    private void exitFile() {
-        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-    }
 }

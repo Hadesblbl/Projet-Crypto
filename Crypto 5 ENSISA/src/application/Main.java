@@ -7,6 +7,7 @@ public class Main {
 		EncryptorView view = new EncryptorView();
 		EncryptorController controller = new EncryptorController(model, view);
 
+		view.addController(controller);
 		view.setVisible(true);
 	}
 

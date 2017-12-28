@@ -1,4 +1,4 @@
-package application;
+package encryption;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -14,9 +14,9 @@ import javax.crypto.spec.PBEParameterSpec;
 
 public class PasswordBasedEncrypt {
 	//Quand on veut decrypter, avec le même mdp on doit avoir la meme cle
-	public int c; //iterations
-	public byte[] salt;
-	public PBEParameterSpec pSpecs;
+	private int c; //iterations
+	private byte[] salt;
+	private PBEParameterSpec pSpecs;
 	
 	public PasswordBasedEncrypt(int c,byte[] salt){
 		this.salt= salt;
@@ -28,7 +28,7 @@ public class PasswordBasedEncrypt {
 	 * @param password
 	 * @return une SecretKey générée à partir du mot de passe
 	 */
-	SecretKey fromPassword(char[] password){
+	private SecretKey fromPassword(char[] password){
 		SecretKey key= null;
 		try {
 			SecretKeyFactory keyFact = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
@@ -45,7 +45,7 @@ public class PasswordBasedEncrypt {
 	 * @param password
 	 * @return une instance de Cipher qui nous permettra de crypter notre image
 	 */
-	Cipher getCipher(char[] password){
+	public Cipher getCipher(char[] password){
 		Cipher cipher=null;
 		try {
 			cipher = Cipher.getInstance("PBEWithMD5AndDES");
