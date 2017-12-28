@@ -14,9 +14,6 @@ public class EncryptorView extends JFrame implements ActionListener {
     * TODO: Implémentation d'ActionListener dans EncryptorController ?
     * */
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 9055585013467848278L;
 	private final JMenuBar MENU_BAR = new JMenuBar();
     private final JMenu FICHIER_MENU = new JMenu("Fichier");
