@@ -6,8 +6,8 @@ public class Main {
 		EncryptorModel model = new EncryptorModel();
 		EncryptorView view = new EncryptorView();
 		EncryptorController controller = new EncryptorController(model, view);
-		view.addController(controller);
 
+		view.addController(controller);
 		view.setVisible(true);
 	}
 
