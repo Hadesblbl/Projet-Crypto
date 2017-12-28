@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 public class EncryptorModel extends JPanel {
 
 	private static final long serialVersionUID = -7000404362747523378L;
+
 	private BufferedImage image = null;
     private Point p1 = null;
     private Point p2 = null;
