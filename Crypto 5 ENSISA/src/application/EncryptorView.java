@@ -18,6 +18,7 @@ public class EncryptorView extends JFrame implements Observer {
     private final JMenuItem FERMER_MENU = new JMenuItem("Fermer");
     private final JMenu EDITION_MENU = new JMenu("Édition");
     private final JMenuItem CRYPTER_MENU = new JMenuItem("Crypter");
+    private final JMenuItem DECRYPTER_MENU = new JMenuItem("Décrypter");
 
     private final EncryptorModel encryptorModel = new EncryptorModel();
 
@@ -67,6 +68,7 @@ public class EncryptorView extends JFrame implements Observer {
 
         createMenu(EDITION_MENU);
         createSubMenu(CRYPTER_MENU, EDITION_MENU);
+        createSubMenu(DECRYPTER_MENU, EDITION_MENU);
 
         setKeyboardShortcuts();
         getContentPane().add(encryptorModel);
@@ -99,6 +101,8 @@ public class EncryptorView extends JFrame implements Observer {
     private void setKeyboardShortcuts() {
         OUVRIR_MENU.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
         FERMER_MENU.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK));
+        CRYPTER_MENU.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK));
+        DECRYPTER_MENU.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_DOWN_MASK));
     }
 
     /**
