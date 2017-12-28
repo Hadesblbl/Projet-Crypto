@@ -1,6 +1,9 @@
 package application;
 
 import javax.swing.*;
+
+import components.ScrollBar;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -9,6 +12,9 @@ import javax.imageio.ImageIO;
 
 public class EncryptorModel extends JPanel {
 
+	
+	private ScrollBar horizontal = new ScrollBar(this , "Horizontal");
+	private ScrollBar vertical = new ScrollBar(this , "Vertical");
 	private static final long serialVersionUID = -7000404362747523378L;
 	private BufferedImage image = null;
     private Point p1 = null;
@@ -16,6 +22,10 @@ public class EncryptorModel extends JPanel {
 
     EncryptorModel() {
         super();
+        setLayout(new BorderLayout());
+        add(horizontal, BorderLayout.SOUTH);
+        add(vertical, BorderLayout.EAST);
+       
     }
 
     public BufferedImage getImage() {

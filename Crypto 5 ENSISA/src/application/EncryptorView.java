@@ -14,7 +14,7 @@ public class EncryptorView extends JFrame {
     private final JMenu FICHIER_MENU = new JMenu("Fichier");
     private final JMenuItem OUVRIR_MENU = new JMenuItem("Ouvrir");
     private final JMenuItem FERMER_MENU = new JMenuItem("Fermer");
-    private final JMenu EDITION_MENU = new JMenu("Ã‰dition");
+    private final JMenu EDITION_MENU = new JMenu("Édition");
     private final JMenuItem CRYPTER_MENU = new JMenuItem("Crypter");
 
     private final EncryptorModel encryptorModel = new EncryptorModel();
