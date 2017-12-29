@@ -46,7 +46,7 @@ public class EncryptorView extends JFrame {
 	            this.setLocationRelativeTo(null);
         	}
         	else {
-        		 this.setSize(900, 900);
+        		 this.setSize(900, 600);
  	            this.setLocationRelativeTo(null);
         	}
         } catch (NullPointerException e) {
