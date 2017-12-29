@@ -56,4 +56,29 @@ public class PasswordBasedEncrypt {
 		}
 		return cipher;
 	}
+	
+	/**
+	 * @param password
+	 * @param mode (Cipher.ENCRYPT_MODE ou Cipher.DECRYPT_MODE selon l'utilisation)
+	 * @param crypt (méthode de cryptage)
+	 * @param salt
+	 * @param ite (le nombre d'itération lors de la création de la clé)
+	 * @return
+	 */
+	public static Cipher getCipher(char[] password,int mode,String crypt,byte[] salt,int ite){ //Pareil que l'autre Cipher mais on a pas besoin d'instance de la classe pour l'utiliser
+		Cipher cipher=null;
+		try {
+			PBEParameterSpec pSpecs = new PBEParameterSpec(salt, ite);
+			SecretKeyFactory keyFact = SecretKeyFactory.getInstance(crypt);//"PBEWithMD5AndDES"
+			PBEKeySpec kSpecs = new PBEKeySpec(password);
+			SecretKey key = keyFact.generateSecret(kSpecs); //On crée la clé secrète
+			
+			cipher = Cipher.getInstance(crypt);
+			cipher.init(mode, key, pSpecs); //On crée et initialise le Cipher grâce à la clé
+			
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | InvalidKeySpecException e) {
+			e.printStackTrace();
+		}
+		return cipher;
+	}
 }
