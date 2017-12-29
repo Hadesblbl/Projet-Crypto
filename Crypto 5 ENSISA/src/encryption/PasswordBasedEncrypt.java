@@ -43,13 +43,14 @@ public class PasswordBasedEncrypt {
 	
 	/**
 	 * @param password
+	 * @param mode (Cipher.ENCRYPT_MODE ou Cipher.DECRYPT_MODE selon l'utilisation)
 	 * @return une instance de Cipher qui nous permettra de crypter notre image
 	 */
-	public Cipher getCipher(char[] password){
+	public Cipher getCipher(char[] password,int mode){
 		Cipher cipher=null;
 		try {
 			cipher = Cipher.getInstance("PBEWithMD5AndDES");
-			cipher.init(Cipher.ENCRYPT_MODE, fromPassword(password), pSpecs);
+			cipher.init(mode, fromPassword(password), pSpecs);
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException e) {
 			e.printStackTrace();
 		}
