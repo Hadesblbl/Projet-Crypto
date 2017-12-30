@@ -39,10 +39,16 @@ public class EncryptorView extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
-    protected void resizeFrame() {
+    public void resizeFrame() {
         try {
-            this.setSize(encryptorModel.getImage().getWidth() + 16, encryptorModel.getImage().getHeight() + 62);
-            this.setLocationRelativeTo(null);
+        	if (encryptorModel.getImage().getWidth() <= 900 && encryptorModel.getImage().getHeight() <= 900 ){
+	            this.setSize(encryptorModel.getImage().getWidth(), encryptorModel.getImage().getHeight());
+	            this.setLocationRelativeTo(null);
+        	}
+        	else {
+        		 this.setSize(900, 600);
+ 	            this.setLocationRelativeTo(null);
+        	}
         } catch (NullPointerException e) {
             e.printStackTrace();
         }

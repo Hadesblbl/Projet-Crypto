@@ -50,7 +50,7 @@ public class ScrollBar extends JScrollPane{
 		    int type = evt.getAdjustmentType();
 		    switch (type) {
 		    case AdjustmentEvent.UNIT_INCREMENT:
-		      System.out.println("Scrollbar was increased by one unit");
+		      //source.
 		      break;
 		    case AdjustmentEvent.UNIT_DECREMENT:
 		      System.out.println("Scrollbar was decreased by one unit");
