@@ -5,7 +5,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.nio.file.NoSuchFileException;
 
 class EncryptorController implements ActionListener, MouseListener, MouseMotionListener {
 
@@ -55,11 +54,10 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
     }
 
     private void encryptFile() {
-        /*try {
+        if (model.getImage() == null || model.getSelectionRectangle() == null)
+            return;
 
-        } catch (NoSuchFileException e) {
-            e.printStackTrace();
-        }*/
+        model.encryptionTest();
     }
 
     /* Interaction image */

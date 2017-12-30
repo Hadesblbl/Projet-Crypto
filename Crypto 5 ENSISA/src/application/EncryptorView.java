@@ -4,8 +4,10 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-public class EncryptorView extends JFrame {
+public class EncryptorView extends JFrame implements Observer {
 
 	private static final long serialVersionUID = 9055585013467848278L;
 
@@ -16,6 +18,7 @@ public class EncryptorView extends JFrame {
     private final JMenuItem FERMER_MENU = new JMenuItem("Fermer");
     private final JMenu EDITION_MENU = new JMenu("Édition");
     private final JMenuItem CRYPTER_MENU = new JMenuItem("Crypter");
+    private final JMenuItem DECRYPTER_MENU = new JMenuItem("Décrypter");
 
     private final EncryptorModel encryptorModel = new EncryptorModel();
 
@@ -39,6 +42,11 @@ public class EncryptorView extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
+    /**
+     * Redimensionne la fenêtre active en fonction de l'image chargée
+     *
+     * @throws NullPointerException si aucune image est chargée
+     */
     public void resizeFrame() {
         try {
         	if (encryptorModel.getImage().getWidth() <= 900 && encryptorModel.getImage().getHeight() <= 900 ){
@@ -54,6 +62,9 @@ public class EncryptorView extends JFrame {
         }
     }
 
+    /**
+     * Crée les différents menus disponibles et cliquables au lancement
+     */
     private void createMenuBar() {
         setJMenuBar(MENU_BAR);
 
@@ -63,28 +74,56 @@ public class EncryptorView extends JFrame {
 
         createMenu(EDITION_MENU);
         createSubMenu(CRYPTER_MENU, EDITION_MENU);
+        createSubMenu(DECRYPTER_MENU, EDITION_MENU);
 
         setKeyboardShortcuts();
         getContentPane().add(encryptorModel);
     }
 
+
+    /**
+     * Crée un menu en haut de la fenêtre
+     *
+     * @param menu JMenu à créer
+     */
     private void createMenu(JMenu menu) {
         MENU_BAR.add(menu);
     }
 
+    /**
+     * Crée un sous-menu à un menu parent (qui apparaît lorsqu'on clique sur ce dernier)
+     *
+     * @param menu JMenuItem à créer
+     * @param parent JMenu parent où sera contenu menu
+     */
     private void createSubMenu(JMenuItem menu, JMenu parent) {
         parent.add(menu);
         menuItems.add(menu);
     }
 
+    /**
+     * Spécifie les différents raccourcis claviers utilisables pour les menus
+     */
     private void setKeyboardShortcuts() {
         OUVRIR_MENU.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
         FERMER_MENU.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK));
+        CRYPTER_MENU.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK));
+        DECRYPTER_MENU.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_DOWN_MASK));
     }
 
+    /**
+     * Ajoute un ActionListener à chacun des sous-menus dans un Controller
+     * Permet au Controller de réagir au clic de la souris et d'agir par conséquence
+     *
+     * @param controller le Controller responsable de l'écoute des sous-menus
+     */
     public void addController(EncryptorController controller) {
         for (JMenuItem item : menuItems)
             item.addActionListener(controller);
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+        encryptorModel.repaint();
+    }
 }
