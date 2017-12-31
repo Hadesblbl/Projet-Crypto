@@ -1,10 +1,17 @@
 package application;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import encryption.CryptedImage;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -28,11 +35,6 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 
     /* Interaction menu */
 
-    /**
-     * Différentes actions à effectuer en fonction du sous-menu cliqué par l'utilisateur
-     *
-     * @param e événement de clic
-     */
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
@@ -49,7 +51,8 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
                 decryptFile();
                 break;
             case "Nettoyer":
-                clearFile();
+                model.clearRectangles();
+                model.repaint();
                 break;
         }
     }
@@ -83,12 +86,18 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
      * retournera rien
      */
     private void encryptFile() {
-        if (model.getImage() == null || model.getRectangles().isEmpty())
+    	if (model.getImage() == null){
+            System.out.println("Ouvrez une image depuis le menu Edition/Ouvrir");
+    	}
+    	
+        if (model.getImage() == null || model.getRectangles().isEmpty()) {
+            System.out.println("Pas de zone à crypter");
             return;
-        //TODO: change this
-        encryption.Encryption.encryptImage(model.getRectangles(), model.getImage(), "oui".toCharArray());
-        clearFile();
-        model.repaint();
+        }
+        char[] password = PopUp.PopupIdentification();
+        encryption.Encryption.encryptImage(model.getRectangles(), model.getImage(), password); //L'image encryptée est celle qu'on a ouvert précédemment
+        //ajouter les metadata
+        //proposer d'enregistrer
     }
 
     /**
@@ -96,17 +105,35 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
      * (...)
      */
     private void decryptFile() {
-        // JavaDoc à finir en fonction de ce qui est fait
-        System.out.println("To be done");
-    }
+    	// JavaDoc à finir en fonction de ce qui est fait
+    	//Fonction à refaire/finir/perfectionner
 
-    /**
-     * Retire les différents rectangles créés à la sélection, cela fait office
-     * de soft reset
-     */
-    private void clearFile() {
-        model.clearRectangles();
-        model.repaint();
+    	try {
+    		JFileChooser fileChooser = new JFileChooser();
+    		FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter(".png", "png");
+    		fileChooser.setFileFilter(extensionFilter);
+    		File chosen= new File(fileChooser.getSelectedFile().getAbsolutePath());
+    		FileReader fr= new FileReader(chosen);
+    		byte[] cryptedIMG= new byte[(int) chosen.length()];
+    		int b;
+    		int index=0;
+    		while ((b=fr.read()) != -1){
+    			cryptedIMG[index]= (byte) b;
+    			index++;
+    		}
+
+    		char[] password=PopUp.PopupIdentification(); //on set le mdp avec la fenêtre popup
+
+    		CryptedImage ci= new CryptedImage(chosen);
+    		String list=ci.readMetadata(cryptedIMG);
+    		ArrayList<Rectangle> rectCrypte= new ArrayList<Rectangle>();// récup metadata ici
+    		rectCrypte.add(new Rectangle(0,0,0,0));
+    		
+    		encryption.Encryption.encryptImage(rectCrypte, model.getImage(), password);
+    		//Enregistrer le fichier qqpart ici
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	} 
     }
 
     /* Interaction image */

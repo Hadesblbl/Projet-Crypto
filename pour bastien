@@ -35,7 +35,7 @@ public class PopUp{
 		jop3.showMessageDialog(null, "Message PrÃ©ventif","Attention", jop3.WARNING_MESSAGE);
 	}
 	
-	public static char[] PopupIdentification() {
+	public static void PopupIdentification() {
 		//Identification mot de passe
 	    JOptionPane jop4;
 	    JOptionPane jop5;
@@ -44,7 +44,7 @@ public class PopUp{
 	    @SuppressWarnings("static-access")
 		String reponse = jop4.showInputDialog(null,"Veuillez entrer votre mot de passe","Identification",JOptionPane.QUESTION_MESSAGE);
 	    jop5.showMessageDialog(null, "Votre mot de passe est " + reponse, "IdentitÃ©", JOptionPane.INFORMATION_MESSAGE);
-	    return reponse.toCharArray();
+	    
 	}
 }
 

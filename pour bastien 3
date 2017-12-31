@@ -35,7 +35,7 @@ public class PopUp{
 		jop3.showMessageDialog(null, "Message PrÃ©ventif","Attention", jop3.WARNING_MESSAGE);
 	}
 	
-	public static char[] PopupIdentification() {
+	/*public static void PopupIdentification() {
 		//Identification mot de passe
 	    JOptionPane jop4;
 	    JOptionPane jop5;
@@ -44,15 +44,15 @@ public class PopUp{
 	    @SuppressWarnings("static-access")
 		String reponse = jop4.showInputDialog(null,"Veuillez entrer votre mot de passe","Identification",JOptionPane.QUESTION_MESSAGE);
 	    jop5.showMessageDialog(null, "Votre mot de passe est " + reponse, "IdentitÃ©", JOptionPane.INFORMATION_MESSAGE);
-	    return reponse.toCharArray();
+	    
 	}
-}
+}*/
 
 		/*if(reponse == JOptionPane.OK_OPTION){
 	    	System.exit(1);
 	    	}*/
 	
-	/*public static void PopupIdentification() {
+	public static void PopupIdentification() {
 		
 		JFrame frame;
 		
@@ -107,49 +107,4 @@ public class PopUp{
 		
 	}
 }
-
-				/*Object model;
-				if (model != null) {
-					BufferedImage image = model.getImage();
-
-					// Recuperer les rectangles de la vue
-					rectangles = view.getPreparedRectangles();
-
-					// le String correspondant aux donnees a crypter
-					String rgbString = getRGBToString(image);
-					SecretKey aesKey = null;
-					try {
-						aesKey = encryptionPassword(password);
-					} catch (NoSuchAlgorithmException | InvalidKeySpecException e3) {
-						e3.printStackTrace();
-					}
-
-					try {
-						String initVector = "RandomInitVector";
-						String encryptedString = newEncrypt(initVector, rgbString, aesKey);
-
-						String[] json = null;
-						json = imageModelJSON.writeImageModelJSONFile(path, fileName, encryptedString);
-						String extension = fileName.split("\\.")[1];
-						model.saveIMG(path, extension);
-
-						String jsonFolder = json[0];
-						String jsonName = json[1];
-						String imageFolderPath = path.split(fileName)[0];
-						hideZipInImage(imageFolderPath, fileName, jsonFolder, jsonName);
-
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					} catch (Exception e1) {
-						e1.printStackTrace();
-					}
-				}
-				frame.setVisible(false);
-				frame.dispose();
-				model.loadImage(path);
-				view.setRectangles(new ArrayList<Rectangle>());
-				view.repaint();
-			}
-
-		});*/
 
