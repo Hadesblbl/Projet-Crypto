@@ -76,9 +76,12 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
     private void encryptFile() {
         if (model.getImage() == null || model.getSelectionRectangle() == null) {
             System.out.println("To be done");
+            return;
         }
-        return;
-
+        //test
+        Rectangle[] bamboula = new Rectangle[1];
+        bamboula[0] = model.getSelectionRectangle();
+        encryption.Encryption.encryptImage(bamboula, model.getImage(), "oui".toCharArray());
         //model.encryptionTest();
     }
 
