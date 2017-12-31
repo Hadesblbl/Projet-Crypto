@@ -1,18 +1,26 @@
 package application;
 
-import encryption.CryptedImage;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import encryption.CryptedImage;
 
 /**
  * (Composant EncryptorController du modèle MVC de l'application)
@@ -63,6 +71,7 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 		JFileChooser fileChooser = new JFileChooser();
 		FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter(".png", "png");
 		fileChooser.setFileFilter(extensionFilter);
+		fileChooser.setDialogTitle("Ouvrir l'image PNG à crypter");
 
 		if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION)
 			model.addImage(new File(fileChooser.getSelectedFile().getAbsolutePath()));
