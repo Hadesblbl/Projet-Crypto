@@ -194,6 +194,9 @@ public class EncryptorModel extends JPanel {
 		this.rectangles = rectangles;
 	}
 
+    /**
+     * @return true si on a des rectangles en mémoire dans Model
+     */
 	boolean isCryptable() {
         return !this.getRectangles().isEmpty() || this.getSelectionRectangle() != null;
     }
