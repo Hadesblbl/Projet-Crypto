@@ -187,10 +187,14 @@ public class EncryptorModel extends JPanel {
     }
 
 	ArrayList<Rectangle> getRectangles() {
-		return rectangles;
+		return this.rectangles;
 	}
 
 	private void setRectangles(ArrayList<Rectangle> rectangles) {
 		this.rectangles = rectangles;
 	}
+
+	boolean isCryptable() {
+        return !this.getRectangles().isEmpty() || this.getSelectionRectangle() != null;
+    }
 }

@@ -22,10 +22,11 @@ import javax.xml.soap.Node;
 import org.w3c.dom.NodeList;
 
 public class CryptedImage {
-	
-	public static char[] writeMetadata(List<Rectangle> selectedAreas,BufferedImage image) throws IOException{
-		ImageWriter writer = ImageIO.getImageWritersByFormatName("png").next();
 
+	private static final String STANDARD_METADATA_FORMAT = "javax_imageio_1.0";
+
+	public static char[] writeMetadata(List<Rectangle> selectedAreas, BufferedImage image) throws IOException {
+		ImageWriter writer = ImageIO.getImageWritersByFormatName("png").next();
 	    ImageWriteParam writeParam = writer.getDefaultWriteParam();
 	    ImageTypeSpecifier typeSpecifier = ImageTypeSpecifier.createFromBufferedImageType(BufferedImage.TYPE_INT_RGB);
 
@@ -41,10 +42,10 @@ public class CryptedImage {
 	    IIOMetadataNode areas = new IIOMetadataNode("Areas");
 	    areas.appendChild(areasEntry);
 
-	    IIOMetadataNode root = new IIOMetadataNode("javax_imageio_png_1.0");
+	    IIOMetadataNode root = new IIOMetadataNode(STANDARD_METADATA_FORMAT);
 	    root.appendChild(areas);
 
-	    metadata.mergeTree("javax_imageio_png_1.0", root);
+	    metadata.mergeTree(STANDARD_METADATA_FORMAT, root);
 
 	    //writing the data
 	    ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -54,7 +55,7 @@ public class CryptedImage {
 	    stream.close();
 		return writer.toString().toCharArray();
 	}
-	
+
 	public static String readMetadata(byte[] imageData) throws IOException{
 		ImageReader imageReader = ImageIO.getImageReadersByFormatName("png").next();
 

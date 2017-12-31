@@ -2,12 +2,13 @@ package application;
 
 import encryption.CryptedImage;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -84,28 +85,20 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 	 * retournera rien
 	 */
 	private void encryptFile() {
-		if (model.getImage() == null){
-			System.out.println("Ouvrez une image depuis le menu Edition/Ouvrir");
-		}
-
-		if (model.getImage() == null || model.getRectangles().isEmpty()) {
-			System.out.println("Pas de zone à crypter");
-			return;
-		}
+		if (!model.isCryptable())	return;
 
 		char[] password = PopUp.PopupIdentification();
-		BufferedImage encryptedIMG =encryption.Encryption.encryptImage(model.getRectangles(), model.getImage(), password); //L'image encryptée est celle qu'on a ouvert précédemment
+		BufferedImage encryptedIMG = encryption.Encryption.encryptImage(model.getRectangles(), model.getImage(), password); //L'image encryptée est celle qu'on a ouvert précédemment
 		char[] b;
 		
 		try {
-			b = CryptedImage.writeMetadata(model.getRectangles(),encryptedIMG);
+			b = CryptedImage.writeMetadata(model.getRectangles(), encryptedIMG);
 			JFileChooser fileChooser = new JFileChooser();
 			FileWriter fw = new FileWriter(fileChooser.getSelectedFile()+".png");
 			fw.write(new String(b));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}//ajouter les metadata
+		}
 		//proposer d'enregistrer
 
 		clearFile();
@@ -116,24 +109,23 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 	 * Recupère les bytes d'un file
 	 */
 	private byte[] fileToByte(File file){
-		byte[] cryptedIMG=null;
+		byte[] cryptedImage = null;
 		try {
 			FileReader fr;
 			fr = new FileReader(file);
-			cryptedIMG = new byte[(int) file.length()];
+			cryptedImage = new byte[(int) file.length()];
 			int b;
-			int index=0;
-			while ((b=fr.read()) != -1){
-				cryptedIMG[index]= (byte) b;
+			int index = 0;
+			while ((b=fr.read()) != -1) {
+				cryptedImage[index]= (byte) b;
 				index++;
 			}
 			fr.close();
-			return cryptedIMG;
+			return cryptedImage;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return cryptedIMG;
+		return cryptedImage;
 	}
 
 	/**
