@@ -51,8 +51,7 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
                 decryptFile();
                 break;
             case "Nettoyer":
-                model.clearRectangles();
-                model.repaint();
+                clearFile();
                 break;
         }
     }
@@ -94,10 +93,14 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
             System.out.println("Pas de zone à crypter");
             return;
         }
+
         char[] password = PopUp.PopupIdentification();
         encryption.Encryption.encryptImage(model.getRectangles(), model.getImage(), password); //L'image encryptée est celle qu'on a ouvert précédemment
         //ajouter les metadata
         //proposer d'enregistrer
+
+        clearFile();
+        model.repaint();
     }
 
     /**
@@ -126,7 +129,7 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 
     		CryptedImage ci= new CryptedImage(chosen);
     		String list=ci.readMetadata(cryptedIMG);
-    		ArrayList<Rectangle> rectCrypte= new ArrayList<Rectangle>();// récup metadata ici
+    		ArrayList<Rectangle> rectCrypte= new ArrayList<>();// récup metadata ici
     		rectCrypte.add(new Rectangle(0,0,0,0));
     		
     		encryption.Encryption.encryptImage(rectCrypte, model.getImage(), password);
@@ -134,6 +137,14 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
     	} catch (IOException e) {
     		e.printStackTrace();
     	} 
+    }
+
+    /**
+     * Retire les différents rectangles créés par sélection
+     */
+    private void clearFile() {
+        model.clearRectangles();
+        model.repaint();
     }
 
     /* Interaction image */
