@@ -33,10 +33,10 @@ public class CryptedImage {
 	    IIOMetadata metadata = writer.getDefaultImageMetadata(typeSpecifier, writeParam);
 
 	    IIOMetadataNode areasEntry = new IIOMetadataNode("AreasEntry");
-	    String area = ""; 
+	    StringBuilder area = new StringBuilder();
 	    for(Rectangle rect : selectedAreas)
-	    	area += rect.toString();
-	    areasEntry.setAttribute("selectedAreas", area);
+	    	area.append(rect.toString());
+	    areasEntry.setAttribute("selectedAreas", area.toString());
 
 	    IIOMetadataNode areas = new IIOMetadataNode("Areas");
 	    areas.appendChild(areasEntry);
