@@ -42,6 +42,10 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
             case "Décrypter":
                 decryptFile();
                 break;
+            case "Nettoyer":
+                model.clearRectangles();
+                model.repaint();
+                break;
         }
     }
 
@@ -119,7 +123,9 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {
+    	model.addRectangle(model.getSelectionRectangle());
+    }
 
     @Override
     public void mouseEntered(MouseEvent e) {}

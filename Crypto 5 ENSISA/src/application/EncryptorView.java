@@ -25,7 +25,8 @@ public class EncryptorView extends JFrame {
     private final JMenu EDITION_MENU = new JMenu("Édition");
     private final JMenuItem CRYPTER_MENU = new JMenuItem("Crypter");
     private final JMenuItem DECRYPTER_MENU = new JMenuItem("Décrypter");
-
+    private final JMenuItem CLEAR_MENU = new JMenuItem("Nettoyer");
+    
     private final EncryptorModel encryptorModel = new EncryptorModel();
 
     EncryptorView() {
@@ -81,6 +82,7 @@ public class EncryptorView extends JFrame {
         createMenu(EDITION_MENU);
         createSubMenu(CRYPTER_MENU, EDITION_MENU);
         createSubMenu(DECRYPTER_MENU, EDITION_MENU);
+        createSubMenu(CLEAR_MENU, EDITION_MENU);
 
         setKeyboardShortcuts();
         getContentPane().add(encryptorModel);
