@@ -37,9 +37,8 @@ public class PopUp{
 	    jop5.showMessageDialog(null, "Votre mot de passe est " + reponse, "Identité", JOptionPane.INFORMATION_MESSAGE);
 	    
 	  
-		if(reponse == JOptionPane.OK_OPTION){
+		if(reponse == JOptionPane.OK_OPTION)
 	    	System.exit(1);
-	    	}
 	    
 	}
 }
