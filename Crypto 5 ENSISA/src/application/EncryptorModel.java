@@ -21,9 +21,11 @@ public class EncryptorModel extends JPanel {
     private Point p2 = null;
     private Rectangle selectionRectangle;
     private JPanel canvas;
+    private Rectangle[] rectangles;
 
     EncryptorModel() {
         super();
+        rectangles= new Rectangle[100];
         this.canvas = new JPanel() {
 			private static final long serialVersionUID = 1L;
 
