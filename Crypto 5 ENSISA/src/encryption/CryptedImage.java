@@ -22,20 +22,8 @@ import javax.xml.soap.Node;
 import org.w3c.dom.NodeList;
 
 public class CryptedImage {
-
-	private BufferedImage image;
-	private File path;
 	
-	public CryptedImage(File image){
-		this.path = image;
-		try {
-			this.image = ImageIO.read(this.path);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void writeMetadata(List<Rectangle> selectedAreas) throws IOException{
+	public static char[] writeMetadata(List<Rectangle> selectedAreas,BufferedImage image) throws IOException{
 		ImageWriter writer = ImageIO.getImageWritersByFormatName("png").next();
 
 	    ImageWriteParam writeParam = writer.getDefaultWriteParam();
@@ -62,20 +50,12 @@ public class CryptedImage {
 	    ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	    ImageOutputStream stream = ImageIO.createImageOutputStream(baos);
 	    writer.setOutput(stream);
-	    writer.write(metadata, new IIOImage(this.image, null, metadata), writeParam);
+	    writer.write(metadata, new IIOImage(image, null, metadata), writeParam);
 	    stream.close();
-		
+		return writer.toString().toCharArray();
 	}
 	
-	public void createFile(){
-		try {
-			ImageIO.write(image,"Mon Image cryptée", path);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public String readMetadata(byte[] imageData) throws IOException{
+	public static String readMetadata(byte[] imageData) throws IOException{
 		ImageReader imageReader = ImageIO.getImageReadersByFormatName("png").next();
 
 	    imageReader.setInput(ImageIO.createImageInputStream(new ByteArrayInputStream(imageData)), true);

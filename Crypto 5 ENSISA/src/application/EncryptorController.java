@@ -10,7 +10,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -22,179 +24,207 @@ import java.util.ArrayList;
  */
 class EncryptorController implements ActionListener, MouseListener, MouseMotionListener {
 
-    private EncryptorModel model;
-    private EncryptorView view;
+	private EncryptorModel model;
+	private EncryptorView view;
 
-    private Point p1 = null;
-    private Point p2 = null;
+	private Point p1 = null;
+	private Point p2 = null;
 
-    EncryptorController(EncryptorModel model, EncryptorView view) {
-        this.view = view;
-        this.model = view.getEncryptorModel();
-    }
+	EncryptorController(EncryptorModel model, EncryptorView view) {
+		this.view = view;
+		this.model = view.getEncryptorModel();
+	}
 
-    /* Interaction menu */
+	/* Interaction menu */
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case "Ouvrir":
-                openFile();
-                break;
-            case "Fermer":
-                exitFile();
-                break;
-            case "Crypter":
-                encryptFile();
-                break;
-            case "Décrypter":
-                decryptFile();
-                break;
-            case "Nettoyer":
-                clearFile();
-                break;
-        }
-    }
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		switch (e.getActionCommand()) {
+		case "Ouvrir":
+			openFile();
+			break;
+		case "Fermer":
+			exitFile();
+			break;
+		case "Crypter":
+			encryptFile();
+			break;
+		case "Décrypter":
+			decryptFile();
+			break;
+		case "Nettoyer":
+			clearFile();
+			break;
+		}
+	}
 
-    /**
-     * Permet de rechercher et d'ouvrir une image .png dans l'explorateur de fichiers
-     */
-    private void openFile() {
-        JFileChooser fileChooser = new JFileChooser();
-        FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter(".png", "png");
-        fileChooser.setFileFilter(extensionFilter);
+	/**
+	 * Permet de rechercher et d'ouvrir une image .png dans l'explorateur de fichiers
+	 */
+	private void openFile() {
+		JFileChooser fileChooser = new JFileChooser();
+		FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter(".png", "png");
+		fileChooser.setFileFilter(extensionFilter);
 
-        if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION)
-            model.addImage(new File(fileChooser.getSelectedFile().getAbsolutePath()));
+		if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION)
+			model.addImage(new File(fileChooser.getSelectedFile().getAbsolutePath()));
 
-        view.resizeFrame();
-        model.addMouseListener(this);
-        model.addMouseMotionListener(this);
-    }
+		view.resizeFrame();
+		model.addMouseListener(this);
+		model.addMouseMotionListener(this);
+	}
 
-    /**
-     * Quitte l'application
-     */
-    private void exitFile() {
-        view.dispatchEvent(new WindowEvent(view, WindowEvent.WINDOW_CLOSING));
-    }
+	/**
+	 * Quitte l'application
+	 */
+	private void exitFile() {
+		view.dispatchEvent(new WindowEvent(view, WindowEvent.WINDOW_CLOSING));
+	}
 
-    /**
-     * Lance le processus de cryptage de la zone d'image sélectionnée
-     * Si aucune zone n'a été définie par l'utilisateur, la fonction ne
-     * retournera rien
-     */
-    private void encryptFile() {
-    	if (model.getImage() == null){
-            System.out.println("Ouvrez une image depuis le menu Edition/Ouvrir");
-    	}
-    	
-        if (model.getImage() == null || model.getRectangles().isEmpty()) {
-            System.out.println("Pas de zone à crypter");
-            return;
-        }
+	/**
+	 * Lance le processus de cryptage de la zone d'image sélectionnée
+	 * Si aucune zone n'a été définie par l'utilisateur, la fonction ne
+	 * retournera rien
+	 */
+	private void encryptFile() {
+		if (model.getImage() == null){
+			System.out.println("Ouvrez une image depuis le menu Edition/Ouvrir");
+		}
 
-        char[] password = PopUp.PopupIdentification();
-        encryption.Encryption.encryptImage(model.getRectangles(), model.getImage(), password); //L'image encryptée est celle qu'on a ouvert précédemment
-        //ajouter les metadata
-        //proposer d'enregistrer
+		if (model.getImage() == null || model.getRectangles().isEmpty()) {
+			System.out.println("Pas de zone à crypter");
+			return;
+		}
 
-        clearFile();
-        model.repaint();
-    }
+		char[] password = PopUp.PopupIdentification();
+		BufferedImage encryptedIMG =encryption.Encryption.encryptImage(model.getRectangles(), model.getImage(), password); //L'image encryptée est celle qu'on a ouvert précédemment
+		char[] b;
+		
+		try {
+			b = CryptedImage.writeMetadata(model.getRectangles(),encryptedIMG);
+			JFileChooser fileChooser = new JFileChooser();
+			FileWriter fw = new FileWriter(fileChooser.getSelectedFile()+".png");
+			fw.write(new String(b));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}//ajouter les metadata
+		//proposer d'enregistrer
 
-    /**
-     * Lance le processus de décryptage de la zone sélectionnée
-     * (...)
-     */
-    private void decryptFile() {
-    	// JavaDoc à finir en fonction de ce qui est fait
-    	//Fonction à refaire/finir/perfectionner
+		clearFile();
+		model.repaint();
+	}
 
-    	try {
-    		JFileChooser fileChooser = new JFileChooser();
-    		FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter(".png", "png");
-    		fileChooser.setFileFilter(extensionFilter);
-    		File chosen= new File(fileChooser.getSelectedFile().getAbsolutePath());
-    		FileReader fr= new FileReader(chosen);
-    		byte[] cryptedIMG= new byte[(int) chosen.length()];
-    		int b;
-    		int index=0;
-    		while ((b=fr.read()) != -1){
-    			cryptedIMG[index]= (byte) b;
-    			index++;
-    		}
+	/**
+	 * Recupère les bytes d'un file
+	 */
+	private byte[] fileToByte(File file){
+		byte[] cryptedIMG=null;
+		try {
+			FileReader fr;
+			fr = new FileReader(file);
+			cryptedIMG = new byte[(int) file.length()];
+			int b;
+			int index=0;
+			while ((b=fr.read()) != -1){
+				cryptedIMG[index]= (byte) b;
+				index++;
+			}
+			fr.close();
+			return cryptedIMG;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return cryptedIMG;
+	}
 
-    		char[] password=PopUp.PopupIdentification(); //on set le mdp avec la fenêtre popup
+	/**
+	 * Lance le processus de décryptage de la zone sélectionnée
+	 * (...)
+	 */
+	private void decryptFile() {
+		// JavaDoc à finir en fonction de ce qui est fait
+		//Fonction à refaire/finir/perfectionner
 
-    		CryptedImage ci= new CryptedImage(chosen);
-    		String list=ci.readMetadata(cryptedIMG);
-    		ArrayList<Rectangle> rectCrypte= new ArrayList<>();// récup metadata ici
-    		rectCrypte.add(new Rectangle(0,0,0,0));
-    		
-    		encryption.Encryption.encryptImage(rectCrypte, model.getImage(), password);
-    		//Enregistrer le fichier qqpart ici
-    	} catch (IOException e) {
-    		e.printStackTrace();
-    	} 
-    }
+		try {
+			JFileChooser fileChooser = new JFileChooser();
+			FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter(".png", "png");
+			fileChooser.setFileFilter(extensionFilter);
+			fileChooser.setDialogTitle("Choisir le fichier à crypter");
+			File chosen= new File(fileChooser.getSelectedFile().getAbsolutePath());
+			byte[] cryptedIMG= fileToByte(chosen);
 
-    /**
-     * Retire les différents rectangles créés par sélection
-     */
-    private void clearFile() {
-        model.clearRectangles();
-        model.repaint();
-    }
+			char[] password=PopUp.PopupIdentification(); //on set le mdp avec la fenêtre popup
+			String list=CryptedImage.readMetadata(cryptedIMG);
+			System.out.println(list);
+			ArrayList<Rectangle> rectCrypte= new ArrayList<>();// récup metadata ici
+			rectCrypte.add(new Rectangle(0,0,0,0));
 
-    /* Interaction image */
+			encryption.Encryption.decryptImage(rectCrypte, ImageIO.read(chosen), password);
+			//Enregistrer le fichier qqpart ici
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+	}
 
-    /**
-     * Met à jour les coordonnées du rectangle de sélection lorsque
-     * l'utilisateur clique
-     *
-     * @param e événement de clic
-     */
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        model.update(p1, null);
-    }
+	/**
+	 * Retire les différents rectangles créés par sélection
+	 */
+	private void clearFile() {
+		model.clearRectangles();
+		model.repaint();
+	}
 
-    /**
-     * Récupère la coordonnée du premier point du rectangle de sélection
-     * lorsque l'utilisateur clique
-     *
-     * @param e événement de clic
-     */
-    @Override
-    public void mousePressed(MouseEvent e) {
-        p1 = e.getPoint();
-    }
+	/* Interaction image */
 
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    	model.addRectangle(model.getSelectionRectangle());
-    }
+	/**
+	 * Met à jour les coordonnées du rectangle de sélection lorsque
+	 * l'utilisateur clique
+	 *
+	 * @param e événement de clic
+	 */
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		model.update(p1, null);
+	}
 
-    @Override
-    public void mouseEntered(MouseEvent e) {}
+	/**
+	 * Récupère la coordonnée du premier point du rectangle de sélection
+	 * lorsque l'utilisateur clique
+	 *
+	 * @param e événement de clic
+	 */
+	@Override
+	public void mousePressed(MouseEvent e) {
+		p1 = e.getPoint();
+	}
 
-    @Override
-    public void mouseExited(MouseEvent e) {}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		model.addRectangle(model.getSelectionRectangle());
+	}
 
-    /**
-     * Récupère la coordonnée du second point du rectangle de sélection
-     * lorsque l'utilisateur maintient son curseur appuyé, puis met
-     * à jour les coordonnées des deux points
-     *
-     * @param e événement de clic
-     */
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        p2 = e.getPoint();
-        model.update(p1, p2);
-    }
+	@Override
+	public void mouseEntered(MouseEvent e) {}
 
-    @Override
-    public void mouseMoved(MouseEvent e) {}
+	@Override
+	public void mouseExited(MouseEvent e) {}
+
+	/**
+	 * Récupère la coordonnée du second point du rectangle de sélection
+	 * lorsque l'utilisateur maintient son curseur appuyé, puis met
+	 * à jour les coordonnées des deux points
+	 *
+	 * @param e événement de clic
+	 */
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		p2 = e.getPoint();
+		model.update(p1, p2);
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {}
 }
