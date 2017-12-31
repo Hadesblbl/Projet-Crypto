@@ -1,3 +1,5 @@
+package application;
+
 import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -8,7 +10,7 @@ import javax.swing.JOptionPane;
 public class PopUp{
 	
 	@SuppressWarnings("static-access")
-		
+	public static void createPopup(){
 		//Boite de message d'information
 		JOptionPane jop1;
 		jop1= new JOptionPane ();
@@ -37,8 +39,6 @@ public class PopUp{
 	  
 		if(reponse == JOptionPane.OK_OPTION){
 	    	System.exit(1);
-	    	}
-	    else {
 	    	}
 	    
 	}
