@@ -10,7 +10,10 @@ import javax.swing.JOptionPane;
 public class PopUp{
 	
 	@SuppressWarnings("static-access")
-	public static void createPopup(){
+	public static void main (String[] args) {
+	
+	@SuppressWarnings("static-access")
+		
 		//Boite de message d'information
 		JOptionPane jop1;
 		jop1= new JOptionPane ();
@@ -19,7 +22,7 @@ public class PopUp{
 		//Boite du message d'erreur
 		JOptionPane jop2;
 		jop2= new JOptionPane();
-		jop2.showMessageDialog(null, "Votre mot de passe est incorrect", "Erreur", jop2.ERROR_MESSAGE);
+		jop2.showMessageDialog(null, "Votre mot de passe est incorrecte", "Erreur", jop2.ERROR_MESSAGE);
 		
 		
 		//Boite du message preventif
@@ -33,12 +36,16 @@ public class PopUp{
 	    jop4 = new JOptionPane();
 	    jop5 = new JOptionPane ();
 	    @SuppressWarnings("static-access")
-		int reponse = jop4.showConfirmDialog(null,"Veuillez entrer votre mot de passe","Identification",JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
+		String reponse = jop4.showInputDialog(null,"Veuillez entrer votre mot de passe","Identification",JOptionPane.QUESTION_MESSAGE);
 	    jop5.showMessageDialog(null, "Votre mot de passe est " + reponse, "Identité", JOptionPane.INFORMATION_MESSAGE);
 	    
-	  
-		if(reponse == JOptionPane.OK_OPTION)
+	    
+		/*if(reponse == JOptionPane.OK_OPTION){
 	    	System.exit(1);
+	    	}
+	    else {
+	    	}*/
 	    
 	}
 }
+
