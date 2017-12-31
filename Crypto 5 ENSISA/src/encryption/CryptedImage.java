@@ -69,7 +69,7 @@ public class CryptedImage {
 	
 	public void createFile(){
 		try {
-			ImageIO.write(image,"Mon Image cryptée",path);
+			ImageIO.write(image,"Mon Image cryptée", path);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

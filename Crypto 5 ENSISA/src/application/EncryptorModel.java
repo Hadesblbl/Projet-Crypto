@@ -58,13 +58,11 @@ public class EncryptorModel extends JPanel {
      */
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
         final Graphics2D g2 = (Graphics2D) g;
         drawImage(g2);
         drawSelectionRectangle(g2);
         
   }
-
     /**
      * Dessine l'image chargée sur la fenêtre
      * Ne se passe rien si aucune image a été chargée
@@ -76,10 +74,12 @@ public class EncryptorModel extends JPanel {
             return;
 
         g2.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), this);
+
         canvas.setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
         JScrollPane sp = new JScrollPane(canvas);
         setLayout(new BorderLayout());
-        add(sp, BorderLayout.CENTER);
+        //TODO: Code mis sous quarantaine parce que je sais pas comment gérer le repaint() (Olivier)
+        //this.add(sp, BorderLayout.CENTER);
     }
 
     /**
@@ -88,8 +88,10 @@ public class EncryptorModel extends JPanel {
      * @param g2 composante graphique
      */
     private void drawSelectionRectangle(Graphics2D g2) {
-        if (p2 == null || p1 == null)
+        if (p2 == null || p1 == null) {
+            selectionRectangle = null;
             return;
+        }
 
         g2.setColor(Color.BLACK);
 
