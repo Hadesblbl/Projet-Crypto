@@ -3,6 +3,7 @@ package encryption;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.security.InvalidAlgorithmParameterException;
@@ -13,8 +14,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.crypto.*;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 public class Encryption {
 	/**
@@ -25,22 +28,24 @@ public class Encryption {
 	 * @param ite (le nombre d'itérations lors de la création de la clé)
 	 * @return
 	 */
-	public static Cipher getCipher(char[] password, int mode, String crypt, byte[] salt, int ite){ //Pareil que l'autre Cipher mais on a pas besoin d'instance de la classe pour l'utiliser
+	public static Cipher getCipher(char[] password, int mode, byte[] salt, int ite){ //Pareil que l'autre Cipher mais on a pas besoin d'instance de la classe pour l'utiliser
 		try {
 			Cipher cipher;
-			PBEParameterSpec pSpecs = new PBEParameterSpec(salt, ite);
-			SecretKeyFactory keyFact = SecretKeyFactory.getInstance("PBEWithMD5AndDES");//"PBEWithMD5AndDES"
-			PBEKeySpec kSpecs = new PBEKeySpec(password);
+			IvParameterSpec iv = new IvParameterSpec("testtesttesttest".getBytes("UTF-8"));
+			SecretKeyFactory keyFact = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");//"PBEWithMD5AndDES"
+			PBEKeySpec kSpecs = new PBEKeySpec(password,salt, 65536, 128);
 			SecretKey key = keyFact.generateSecret(kSpecs); //On crée la clé secrète
-			cipher = Cipher.getInstance(crypt);
+			SecretKey secret = new SecretKeySpec(key.getEncoded(), "AES");
+			cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
 			//TODO: InvalidAlgorithmParameterException pour pSpecs
-			cipher.init(mode, key, pSpecs); //On crée et initialise le Cipher grâce à la clé
+			System.out.println("test");
+			cipher.init(mode, secret, iv); //On crée et initialise le Cipher grâce à la clé
 			return cipher;
 
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | InvalidKeySpecException e) {
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | InvalidKeySpecException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		System.out.println("wtf");
+		System.out.println("Didn't manage to create the Cipher");
 		return null;
 	}
 	
@@ -51,11 +56,11 @@ public class Encryption {
 	 * @param mode
 	 * @return 
 	 */
-	private static byte[] crypt(char[] password,byte[] bytearray,int mode){
-		String sel = "2HjkI9e0";
-		byte[] salt = sel.getBytes();
+	private static byte[] crypt(char[] password,byte[] bytearray,int mode){	
+		//32 11 a2 3c 43 a2 e1 23
+		byte[] salt = { (byte) 0x32, (byte) 0x11, (byte) 0xA2, (byte) 0x3C, (byte) 0x43, (byte) 0xA2, (byte) 0xE1, (byte) 0x23 };
 
-		Cipher cipher = getCipher(password, mode,"RC4", salt,64);
+		Cipher cipher = getCipher(password, mode, salt,64);
 		System.out.println("cipher: " + cipher);
 		try {
 			return cipher.doFinal(bytearray);
@@ -112,6 +117,27 @@ public class Encryption {
 	}
 	
 	/**
+	 * @param rectangles
+	 * @param image
+	 * @return le nombre de pixels cryptés dans l'image
+	 */
+	private static int nbPixels(ArrayList<Rectangle> rectangles,BufferedImage image){
+		int nb=0;
+		for (int i = 0; i < image.getWidth(); i++) {
+			for (int j = 0; j < image.getHeight(); j++) {
+		    	for (Iterator<Rectangle> it=rectangles.iterator();it.hasNext();){
+		    		Rectangle r=it.next();
+					if (r.contains(new Point(i, j))) {
+						nb+=1;
+						break;
+					}
+				}
+			}
+		}
+		return nb;
+	}
+	
+	/**
 	 * change les bytes en int et les utilise comme valeur rgb pour reremplir
 	 * @param rectangles
 	 * @param image
@@ -119,17 +145,16 @@ public class Encryption {
 	 * @return
 	 */
 	private static BufferedImage insertRectanglesInImage(ArrayList<Rectangle> rectangles, BufferedImage image, byte[] cryptedArray){
-		ByteBuffer bb=ByteBuffer.allocate(cryptedArray.length);
-		IntBuffer ib=bb.asIntBuffer();
-		bb.put(cryptedArray); 
-		int[] array=ib.array();
+		int index=0;
 		
 		for (int i = 0; i < image.getWidth(); i++) {
 			for (int j = 0; j < image.getHeight(); j++) {
 		    	for (Iterator<Rectangle> it=rectangles.iterator();it.hasNext();){
 		    		Rectangle r=it.next();
 					if (r.contains(new Point(i, j))) {
-						image.setRGB(i, j, array[i*image.getHeight()+j]);//verifier que ça retourne le bon résultat
+						int rgb = cryptedArray[index+5]<<40 | cryptedArray[index+4]<<32 | cryptedArray[index+3]<<24 | cryptedArray[index+2]<<16 | cryptedArray[index+1]<<8 | cryptedArray[index];
+						image.setRGB(i, j, rgb);
+						index+=6;
 						break;
 					}
 				}

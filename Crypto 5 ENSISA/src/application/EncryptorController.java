@@ -79,7 +79,7 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
      * retournera rien
      */
     private void encryptFile() {
-        if (model.getImage() == null || model.getSelectionRectangle() == null) {
+        if (model.getImage() == null || model.getRectangles().isEmpty()) {
             System.out.println("To be done");
             return;
         }
