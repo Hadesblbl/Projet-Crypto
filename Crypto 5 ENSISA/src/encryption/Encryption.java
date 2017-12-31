@@ -65,14 +65,33 @@ public class Encryption {
 		return bytearray;
 	}
 	
+	/**
+	 * Utilise Cipher en ENCRYPT_MODE
+	 * @param password
+	 * @param bytearray
+	 * @return
+	 */
 	private static byte[] encrypt(char[] password,byte[] bytearray){
 		return crypt(password,bytearray,Cipher.ENCRYPT_MODE);
 	}
 	
+	
+	/**
+	 * Utilise Cipher en DECRYPT_MODE
+	 * @param password
+	 * @param bytearray
+	 * @return
+	 */
 	private static byte[] decrypt(char[] password,byte[] bytearray){
 		return crypt(password,bytearray,Cipher.DECRYPT_MODE);
 	}
 	
+	/**
+	 * retourne un tableau de byte à partir des rectangles sélectionnés
+	 * @param rectangles
+	 * @param image
+	 * @return
+	 */
 	private static byte[] byteArrayFromSelectedRectangle(Rectangle[] rectangles,BufferedImage image){
 		String result = "";
 
@@ -89,17 +108,24 @@ public class Encryption {
 		return result.getBytes();
 	}
 	
+	/**
+	 * change les bytes en int et les utilise comme valeur rgb pour reremplir
+	 * @param rectangles
+	 * @param image
+	 * @param cryptedArray
+	 * @return
+	 */
 	private static BufferedImage insertRectanglesInImage(Rectangle[] rectangles, BufferedImage image, byte[] cryptedArray){
 		ByteBuffer bb=ByteBuffer.allocate(cryptedArray.length);
 		IntBuffer ib=bb.asIntBuffer();
-		bb.put(cryptedArray);
+		bb.put(cryptedArray); 
 		int[] array=ib.array();
 		
 		for (int i = 0; i < image.getWidth(); i++) {
 			for (int j = 0; j < image.getHeight(); j++) {
 				for (Rectangle r : rectangles) {
 					if (r.contains(new Point(i, j))) {
-						image.setRGB(i, j, array[i*image.getHeight()+j]);
+						image.setRGB(i, j, array[i*image.getHeight()+j]);//verifier que ça retourne le bon résultat
 						break;
 					}
 				}
@@ -110,6 +136,13 @@ public class Encryption {
 		
 	}
 	
+	/**
+	 * Encrypte l'image à partir du mot de passe, des rectangles et de l'image
+	 * @param r
+	 * @param image
+	 * @param password
+	 * @return
+	 */
 	public static BufferedImage encryptImage(Rectangle[] r, BufferedImage image, char[] password){
 		byte[] array= byteArrayFromSelectedRectangle(r,image);
 		array=encrypt(password,array);
@@ -117,6 +150,13 @@ public class Encryption {
 		return image;
 	}
 	
+	/**
+	 * Décrypte l'image  à partir du mot de passe, des rectangles et de l'image cryptée
+	 * @param r
+	 * @param image
+	 * @param password
+	 * @return
+	 */
 	public static BufferedImage decryptImage(Rectangle[] r,BufferedImage image,char[] password){
 		byte[] array= byteArrayFromSelectedRectangle(r,image);
 		array=decrypt(password,array);
