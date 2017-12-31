@@ -25,6 +25,7 @@ public class EncryptorModel extends JPanel {
     private Rectangle selectionRectangle;
     private JPanel canvas;
     private ArrayList<Rectangle> rectangles;
+    public String path;
 
     EncryptorModel() {
         super();
@@ -198,6 +199,6 @@ public class EncryptorModel extends JPanel {
      * @return true si on a des rectangles en mémoire dans Model
      */
 	boolean isCryptable() {
-        return !this.getRectangles().isEmpty() || this.getSelectionRectangle() != null;
+        return (!this.getRectangles().isEmpty()) && this.getImage() != null;
     }
 }

@@ -107,6 +107,7 @@ public class Encryption {
 	}
 	
 	/**
+	 * 
 	 * @param rectangles
 	 * @param image
 	 * @return le nombre de pixels cryptés dans l'image
@@ -135,13 +136,14 @@ public class Encryption {
 	 */
 	private static BufferedImage insertRectanglesInImage(ArrayList<Rectangle> rectangles, BufferedImage image, byte[] cryptedArray){
 		int index=0;
-		
 		for (int i = 0; i < image.getWidth(); i++) {
 			for (int j = 0; j < image.getHeight(); j++) {
 				for (Rectangle r : rectangles) {
 					if (r.contains(new Point(i, j))) {
-						int rgb = cryptedArray[index + 5] << 40 | cryptedArray[index + 4] << 32 | cryptedArray[index + 3] << 24 | cryptedArray[index + 2] << 16 | cryptedArray[index + 1] << 8 | cryptedArray[index];
-						image.setRGB(i, j, rgb);
+						if (index+5<cryptedArray.length){
+							int rgb = cryptedArray[index + 5] << 40 | cryptedArray[index + 4] << 32 | cryptedArray[index + 3] << 24 | cryptedArray[index + 2] << 16 | cryptedArray[index + 1] << 8 | cryptedArray[index];
+							image.setRGB(i, j, rgb);
+						}
 						index += 6;
 						break;
 					}

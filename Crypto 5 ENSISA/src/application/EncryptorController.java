@@ -11,6 +11,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -73,8 +74,10 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 		fileChooser.setFileFilter(extensionFilter);
 		fileChooser.setDialogTitle("Ouvrir l'image PNG à crypter");
 
-		if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION)
+		if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION){
 			model.addImage(new File(fileChooser.getSelectedFile().getAbsolutePath()));
+			model.path=fileChooser.getSelectedFile().getAbsolutePath();
+		}
 
 		view.resizeFrame();
 		model.addMouseListener(this);
@@ -98,13 +101,13 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 
 		char[] password = PopUp.PopupIdentification();
 		BufferedImage encryptedIMG = encryption.Encryption.encryptImage(model.getRectangles(), model.getImage(), password); //L'image encryptée est celle qu'on a ouvert précédemment
-		char[] b;
+		byte[] b;
 		
 		try {
 			b = CryptedImage.writeMetadata(model.getRectangles(), encryptedIMG);
-			JFileChooser fileChooser = new JFileChooser();
-			FileWriter fw = new FileWriter(fileChooser.getSelectedFile()+".png");
-			fw.write(new String(b));
+			FileOutputStream fos = new FileOutputStream(model.path);
+			fos.write(b);
+			fos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

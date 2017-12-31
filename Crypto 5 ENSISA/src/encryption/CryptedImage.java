@@ -25,7 +25,7 @@ public class CryptedImage {
 
 	private static final String STANDARD_METADATA_FORMAT = "javax_imageio_1.0";
 
-	public static char[] writeMetadata(List<Rectangle> selectedAreas, BufferedImage image) throws IOException {
+	public static byte[] writeMetadata(List<Rectangle> selectedAreas, BufferedImage image) throws IOException {
 		ImageWriter writer = ImageIO.getImageWritersByFormatName("png").next();
 	    ImageWriteParam writeParam = writer.getDefaultWriteParam();
 	    ImageTypeSpecifier typeSpecifier = ImageTypeSpecifier.createFromBufferedImageType(BufferedImage.TYPE_INT_RGB);
@@ -53,7 +53,7 @@ public class CryptedImage {
 	    writer.setOutput(stream);
 	    writer.write(metadata, new IIOImage(image, null, metadata), writeParam);
 	    stream.close();
-		return writer.toString().toCharArray();
+		return baos.toByteArray();
 	}
 
 	public static String readMetadata(byte[] imageData) throws IOException{
