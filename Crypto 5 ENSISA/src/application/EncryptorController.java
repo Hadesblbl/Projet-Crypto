@@ -5,6 +5,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * (Composant EncryptorController du modèle MVC de l'application)
@@ -82,10 +83,7 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
             System.out.println("To be done");
             return;
         }
-        //TODO: enlever ça
-        Rectangle[] test = new Rectangle[1];
-        test[0] = model.getSelectionRectangle();
-        encryption.Encryption.encryptImage(test, model.getImage(), "oui".toCharArray());
+        encryption.Encryption.encryptImage(model.getRectangles(), model.getImage(), "oui".toCharArray());
         //model.encryptionTest();
     }
 

@@ -28,7 +28,7 @@ public class EncryptorModel extends JPanel {
 
     EncryptorModel() {
         super();
-        rectangles= new ArrayList<Rectangle>();
+        setRectangles(new ArrayList<Rectangle>());
         this.canvas = new JPanel() {
 			private static final long serialVersionUID = 1L;
 
@@ -43,7 +43,7 @@ public class EncryptorModel extends JPanel {
      * Remet la liste à 0
      */
     public void clearRectangles(){
-    	rectangles = new ArrayList<Rectangle>();
+    	setRectangles(new ArrayList<Rectangle>());
     	p1=null;
     	p2=null;
     	selectionRectangle=null;
@@ -53,7 +53,7 @@ public class EncryptorModel extends JPanel {
      * Ajoute le rectangle à la liste
      */
     public void addRectangle(Rectangle r){
-    	rectangles.add(r);
+    	getRectangles().add(r);
     }
     
     /**
@@ -112,7 +112,7 @@ public class EncryptorModel extends JPanel {
      */
     private void drawCryptRectangle(Graphics2D g2) {
     	g2.setColor(Color.BLACK);
-    	for (Iterator<Rectangle> it=rectangles.iterator();it.hasNext();){
+    	for (Iterator<Rectangle> it=getRectangles().iterator();it.hasNext();){
     		Rectangle r=it.next();
     		// transparence de fond
     		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f));
@@ -180,4 +180,12 @@ public class EncryptorModel extends JPanel {
         this.p2 = p2;
         repaint();
     }
+
+	public ArrayList<Rectangle> getRectangles() {
+		return rectangles;
+	}
+
+	public void setRectangles(ArrayList<Rectangle> rectangles) {
+		this.rectangles = rectangles;
+	}
 }

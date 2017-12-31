@@ -10,6 +10,8 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -92,12 +94,13 @@ public class Encryption {
 	 * @param image
 	 * @return
 	 */
-	private static byte[] byteArrayFromSelectedRectangle(Rectangle[] rectangles,BufferedImage image){
+	private static byte[] byteArrayFromSelectedRectangle(ArrayList<Rectangle> rectangles,BufferedImage image){
 		String result = "";
 
 		for (int i = 0; i < image.getWidth(); i++) {
 			for (int j = 0; j < image.getHeight(); j++) {
-				for (Rectangle r : rectangles) {
+		    	for (Iterator<Rectangle> it=rectangles.iterator();it.hasNext();){
+		    		Rectangle r=it.next();
 					if (r.contains(new Point(i, j))) {
 						result += String.valueOf(image.getRGB(i, j));
 						break;
@@ -115,7 +118,7 @@ public class Encryption {
 	 * @param cryptedArray
 	 * @return
 	 */
-	private static BufferedImage insertRectanglesInImage(Rectangle[] rectangles, BufferedImage image, byte[] cryptedArray){
+	private static BufferedImage insertRectanglesInImage(ArrayList<Rectangle> rectangles, BufferedImage image, byte[] cryptedArray){
 		ByteBuffer bb=ByteBuffer.allocate(cryptedArray.length);
 		IntBuffer ib=bb.asIntBuffer();
 		bb.put(cryptedArray); 
@@ -123,7 +126,8 @@ public class Encryption {
 		
 		for (int i = 0; i < image.getWidth(); i++) {
 			for (int j = 0; j < image.getHeight(); j++) {
-				for (Rectangle r : rectangles) {
+		    	for (Iterator<Rectangle> it=rectangles.iterator();it.hasNext();){
+		    		Rectangle r=it.next();
 					if (r.contains(new Point(i, j))) {
 						image.setRGB(i, j, array[i*image.getHeight()+j]);//verifier que ça retourne le bon résultat
 						break;
@@ -143,7 +147,7 @@ public class Encryption {
 	 * @param password
 	 * @return
 	 */
-	public static BufferedImage encryptImage(Rectangle[] r, BufferedImage image, char[] password){
+	public static BufferedImage encryptImage(ArrayList<Rectangle> r, BufferedImage image, char[] password){
 		byte[] array= byteArrayFromSelectedRectangle(r,image);
 		array=encrypt(password,array);
 		image=insertRectanglesInImage(r,image,array); //Tester si ça remet bien les bonnes valeurs
@@ -157,7 +161,7 @@ public class Encryption {
 	 * @param password
 	 * @return
 	 */
-	public static BufferedImage decryptImage(Rectangle[] r,BufferedImage image,char[] password){
+	public static BufferedImage decryptImage(ArrayList<Rectangle> r,BufferedImage image,char[] password){
 		byte[] array= byteArrayFromSelectedRectangle(r,image);
 		array=decrypt(password,array);
 		image=insertRectanglesInImage(r,image,array);
