@@ -11,6 +11,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -123,8 +124,7 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 	private byte[] fileToByte(File file){
 		byte[] cryptedImage = null;
 		try {
-			FileReader fr;
-			fr = new FileReader(file);
+			FileInputStream fr = new FileInputStream(file);
 			cryptedImage = new byte[(int) file.length()];
 			int b;
 			int index = 0;
