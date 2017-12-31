@@ -91,7 +91,6 @@ public class Encryption {
 	 */
 	private static byte[] byteArrayFromSelectedRectangle(ArrayList<Rectangle> rectangles,BufferedImage image){
 		StringBuilder result = new StringBuilder();
-
 		for (int i = 0; i < image.getWidth(); i++) {
 			for (int j = 0; j < image.getHeight(); j++) {
 				for (Rectangle r : rectangles) {

@@ -141,6 +141,20 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 	}
 
 	/**
+	 * @param s contenant les 4 valeurs nécessaires pour faire le rectangle
+	 * @return le rectangle correspondant
+	 */
+	private Rectangle stringToRect(String s){
+		String[] value=s.split(" ");
+		if (value.length != 4){
+			System.out.println("erreur: "+value.length+" valeur(s) au lieu de 4");
+			System.out.println(s);
+			return new Rectangle(0,0,0,0);
+		}
+		return new Rectangle(Integer.parseInt(value[0]),Integer.parseInt(value[1]),Integer.parseInt(value[2]),Integer.parseInt(value[3]));
+	}
+	
+	/**
 	 * Lance le processus de décryptage de la zone sélectionnée
 	 * (...)
 	 */
@@ -160,13 +174,22 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 			byte[] cryptedIMG= fileToByte(chosen);
 
 			char[] password=PopUp.PopupIdentification(); //on set le mdp avec la fenêtre popup
-			String list=CryptedImage.readMetadata(cryptedIMG);
-			System.out.println(list);
-			ArrayList<Rectangle> rectCrypte= new ArrayList<>();// récup metadata ici
-			rectCrypte.add(new Rectangle(0,0,0,0));
+			
 
-			encryption.Encryption.decryptImage(rectCrypte, ImageIO.read(chosen), password);
-			//Enregistrer le fichier qqpart ici
+			ArrayList<Rectangle> rectCrypte= new ArrayList<>();// récup metadata ici
+			String list=CryptedImage.readMetadata(cryptedIMG);
+			if (list==null){
+				list="";
+			}
+			String[] rect=list.split("\n");
+			for(String s:rect){
+				rectCrypte.add(stringToRect(s));
+			}
+
+			
+			model.setImage(encryption.Encryption.decryptImage(rectCrypte, ImageIO.read(chosen), password));
+			view.resizeFrame();
+			//enregistrer l'image dans le fichier correspondant
 			
 		} catch (IOException e) {
 			e.printStackTrace();

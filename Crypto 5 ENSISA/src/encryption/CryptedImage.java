@@ -14,7 +14,9 @@ import javax.imageio.ImageReader;
 import javax.imageio.ImageTypeSpecifier;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
+import javax.imageio.metadata.IIOInvalidTreeException;
 import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.metadata.IIOMetadataFormatImpl;
 import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.ImageOutputStream;
 import javax.xml.soap.Node;
@@ -24,7 +26,7 @@ import org.w3c.dom.NodeList;
 public class CryptedImage {
 
 	private static final String STANDARD_METADATA_FORMAT = "javax_imageio_1.0";
-
+    
 	public static byte[] writeMetadata(List<Rectangle> selectedAreas, BufferedImage image) throws IOException {
 		ImageWriter writer = ImageIO.getImageWritersByFormatName("png").next();
 	    ImageWriteParam writeParam = writer.getDefaultWriteParam();
@@ -33,27 +35,37 @@ public class CryptedImage {
 	    //adding metadata
 	    IIOMetadata metadata = writer.getDefaultImageMetadata(typeSpecifier, writeParam);
 
-	    IIOMetadataNode areasEntry = new IIOMetadataNode("AreasEntry");
+	    IIOMetadataNode textEntry = new IIOMetadataNode("tEXTeNTRY");
+	    
 	    StringBuilder area = new StringBuilder();
-	    for(Rectangle rect : selectedAreas)
-	    	area.append(rect.toString());
-	    areasEntry.setAttribute("selectedAreas", area.toString());
-
-	    IIOMetadataNode areas = new IIOMetadataNode("Areas");
-	    areas.appendChild(areasEntry);
+	    for(Rectangle rect : selectedAreas){
+	    	area.append(rect.x);
+    		area.append(" ");
+    		area.append(rect.y);
+    		area.append(" ");
+    		area.append(rect.width);
+    		area.append(" ");
+    		area.append(rect.height);
+	    	area.append("\n");
+	    }
+	    
+	    textEntry.setAttribute("value", area.toString());
+	    
+	    IIOMetadataNode text = new IIOMetadataNode("tEXT");
+	    text.appendChild(textEntry);
 
 	    IIOMetadataNode root = new IIOMetadataNode(STANDARD_METADATA_FORMAT);
-	    root.appendChild(areas);
+	    root.appendChild(text);
 
 	    metadata.mergeTree(STANDARD_METADATA_FORMAT, root);
 
 	    //writing the data
 	    ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	    ImageOutputStream stream = ImageIO.createImageOutputStream(baos);
-	    writer.setOutput(stream);
+	    writer.setOutput(stream); // on dit qu'on écrit dans baos
 	    writer.write(metadata, new IIOImage(image, null, metadata), writeParam);
 	    stream.close();
-		return baos.toByteArray();
+		return baos.toByteArray(); //contient l'image et ses metadata
 	}
 
 	public static String readMetadata(byte[] imageData) throws IOException{
@@ -63,13 +75,15 @@ public class CryptedImage {
 
 	    // read metadata of first image
 	    IIOMetadata metadata = imageReader.getImageMetadata(0);
-	    
 	    //this cast helps getting the contents
 	    String cryptedAreas = null;
-	    NodeList childNodes = ((org.w3c.dom.Node) metadata).getChildNodes();
-	    for (int i = 0; i < childNodes.getLength(); i++) {
-	        Node node = (Node) childNodes.item(i);
-	        cryptedAreas = node.getAttributes().getNamedItem("selectedAreas").getNodeValue();
+	    
+	    IIOMetadataNode nodes = (IIOMetadataNode) metadata.getAsTree(STANDARD_METADATA_FORMAT);
+	    System.out.println(nodes.getAttributes());
+	    if (nodes.getElementsByTagName("Text").getLength()>0){
+	    	IIOMetadataNode text = (IIOMetadataNode) nodes.getElementsByTagName("Text").item(0);
+	    	IIOMetadataNode data = (IIOMetadataNode) text.getElementsByTagName("TextEntry").item(0);
+		    cryptedAreas=data.getAttribute("value");
 	    }
 	    return cryptedAreas;
 	}
