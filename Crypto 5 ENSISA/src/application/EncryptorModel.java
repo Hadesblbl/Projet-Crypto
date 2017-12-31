@@ -14,6 +14,7 @@ public class EncryptorModel extends JPanel {
 	private BufferedImage image = null;
     private Point p1 = null;
     private Point p2 = null;
+    private Rectangle selectionRectangle;
     private JPanel canvas;
 
     EncryptorModel() {
@@ -28,8 +29,12 @@ public class EncryptorModel extends JPanel {
         };
     }
 
-    public BufferedImage getImage() {
+    BufferedImage getImage() {
         return image;
+    }
+
+    Rectangle getSelectionRectangle() {
+        return selectionRectangle;
     }
 
     protected void paintComponent(Graphics g) {
@@ -58,7 +63,7 @@ public class EncryptorModel extends JPanel {
         g2.setColor(Color.BLACK);
 
         // calcul de la selection
-        final Rectangle rect = new Rectangle((p2.x > p1.x) ? p1.x : p2.x,
+        selectionRectangle = new Rectangle((p2.x > p1.x) ? p1.x : p2.x,
                 (p2.y > p1.y) ? p1.y : p2.y,
                 (p2.x > p1.x) ? p2.x - p1.x : p1.x
                         - p2.x, (p2.y > p1.y) ? p2.y
@@ -66,14 +71,14 @@ public class EncryptorModel extends JPanel {
 
         // dessine le fond de la selection avec un effet de transparence
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f));
-        g2.fillRect(rect.x, rect.y, rect.width, rect.height);
+        g2.fillRect(selectionRectangle.x, selectionRectangle.y, selectionRectangle.width, selectionRectangle.height);
 
         // suppression de la transparence pour dessiner la bordure
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        g2.drawRect(rect.x, rect.y, rect.width, rect.height);
+        g2.drawRect(selectionRectangle.x, selectionRectangle.y, selectionRectangle.width, selectionRectangle.height);
     }
 
-    protected void addImage(File imageFile) {
+    void addImage(File imageFile) {
         try {
             image = ImageIO.read(imageFile);
         } catch (IOException e) {
@@ -82,7 +87,7 @@ public class EncryptorModel extends JPanel {
         repaint();
     }
 
-    public void update(Point p1, Point p2) {
+    void update(Point p1, Point p2) {
         this.p1 = p1;
         this.p2 = p2;
         repaint();

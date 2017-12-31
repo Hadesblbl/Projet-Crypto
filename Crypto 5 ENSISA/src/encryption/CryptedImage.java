@@ -46,9 +46,8 @@ public class CryptedImage {
 
 	    IIOMetadataNode areasEntry = new IIOMetadataNode("AreasEntry");
 	    String area = ""; 
-	    for(Rectangle rect : selectedAreas){
-	    	area = area + rect.toString();
-	    }
+	    for(Rectangle rect : selectedAreas)
+	    	area += rect.toString();
 	    areasEntry.setAttribute("selectedAreas", area);
 
 	    IIOMetadataNode areas = new IIOMetadataNode("Areas");
@@ -70,7 +69,7 @@ public class CryptedImage {
 	
 	public void createFile(){
 		try {
-			ImageIO.write(image,"Mon Image cryptée",path);
+			ImageIO.write(image,"Mon Image cryptÃ©e",path);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
