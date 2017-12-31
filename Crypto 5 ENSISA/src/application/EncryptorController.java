@@ -151,8 +151,10 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 			JFileChooser fileChooser = new JFileChooser();
 			FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter(".png", "png");
 			fileChooser.setFileFilter(extensionFilter);
-			fileChooser.setDialogTitle("Choisir le fichier à crypter");
-			File chosen= new File(fileChooser.getSelectedFile().getAbsolutePath());
+			fileChooser.setDialogTitle("Choisir le fichier à décrypter");
+			File chosen= null;
+			if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION)
+				chosen= new File(fileChooser.getSelectedFile().getAbsolutePath());
 			byte[] cryptedIMG= fileToByte(chosen);
 
 			char[] password=PopUp.PopupIdentification(); //on set le mdp avec la fenêtre popup
