@@ -1,49 +1,28 @@
 package application;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 
 public class PopUp{
-	
-	
-	
-	
-	@SuppressWarnings("static-access")
+
 	public static void PopupInformation(){
 		//Boite de message d'information
-		JOptionPane jop1;
-		jop1= new JOptionPane ();
-		jop1.showMessageDialog(null, "Fermeture","Information", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(null, "Fermeture","Information", JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	public static void PopupErreur() {
 		//Boite du message d'erreur
-		JOptionPane jop2;
-		jop2= new JOptionPane();
-		jop2.showMessageDialog(null, "Votre mot de passe est incorrect", "Erreur", jop2.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(null, "Votre mot de passe est incorrect", "Erreur", JOptionPane.ERROR_MESSAGE);
 	}
 		
 	public static void PopupPrevention() {
 		//Boite du message preventif
-		JOptionPane jop3;
-		jop3 = new JOptionPane();
-		jop3.showMessageDialog(null, "Message PrÃ©ventif","Attention", jop3.WARNING_MESSAGE);
+		JOptionPane.showMessageDialog(null, "Message Préventif","Attention", JOptionPane.WARNING_MESSAGE);
 	}
 	
-	public static char[] PopupIdentification() {
+	static char[] PopupIdentification() {
 		//Identification mot de passe
-	    JOptionPane jop4;
-	    JOptionPane jop5;
-	    jop4 = new JOptionPane();
-	    jop5 = new JOptionPane ();
-	    @SuppressWarnings("static-access")
-		String reponse = jop4.showInputDialog(null,"Veuillez entrer votre mot de passe","Identification",JOptionPane.QUESTION_MESSAGE);
-	    jop5.showMessageDialog(null, "Votre mot de passe est " + reponse, "IdentitÃ©", JOptionPane.INFORMATION_MESSAGE);
+		String reponse = JOptionPane.showInputDialog(null,"Veuillez entrer votre mot de passe","Identification",JOptionPane.QUESTION_MESSAGE);
+	    JOptionPane.showMessageDialog(null, "Votre mot de passe est " + reponse, "Identité", JOptionPane.INFORMATION_MESSAGE);
 	    return reponse.toCharArray();
 	}
 }
