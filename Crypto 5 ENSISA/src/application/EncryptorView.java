@@ -7,6 +7,12 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * (Composant Vue du modèle MVC de l'application)
+ * EncryptorView est responsable de la mise en forme de la fenêtre principale
+ * au lancement, c'est-à-dire de son dimensionnement, de ses menus et des
+ * raccourcis menus qui leurs sont associés
+ */
 public class EncryptorView extends JFrame implements Observer {
 
 	private static final long serialVersionUID = 9055585013467848278L;
@@ -28,7 +34,7 @@ public class EncryptorView extends JFrame implements Observer {
         createMenuBar();
     }
 
-    public EncryptorModel getEncryptorModel() {
+    EncryptorModel getEncryptorModel() {
         return encryptorModel;
     }
 
@@ -47,7 +53,7 @@ public class EncryptorView extends JFrame implements Observer {
      *
      * @throws NullPointerException si aucune image est chargée
      */
-    public void resizeFrame() {
+    void resizeFrame() {
         try {
         	if (encryptorModel.getImage().getWidth() <= 900 && encryptorModel.getImage().getHeight() <= 900 ){
 	            this.setSize(encryptorModel.getImage().getWidth(), encryptorModel.getImage().getHeight());
@@ -117,7 +123,7 @@ public class EncryptorView extends JFrame implements Observer {
      *
      * @param controller le Controller responsable de l'écoute des sous-menus
      */
-    public void addController(EncryptorController controller) {
+    void addController(EncryptorController controller) {
         for (JMenuItem item : menuItems)
             item.addActionListener(controller);
     }

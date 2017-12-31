@@ -22,11 +22,11 @@ import javax.crypto.spec.PBEParameterSpec;
 
 public class Encryption {
 	/**
-	 * @param password
+	 * @param password mdp
 	 * @param mode (Cipher.ENCRYPT_MODE ou Cipher.DECRYPT_MODE selon l'utilisation)
 	 * @param crypt (méthode de cryptage)
-	 * @param salt
-	 * @param ite (le nombre d'itération lors de la création de la clé)
+	 * @param salt sel
+	 * @param ite (le nombre d'itérations lors de la création de la clé)
 	 * @return
 	 */
 	public static Cipher getCipher(char[] password,int mode,String crypt,byte[] salt,int ite){ //Pareil que l'autre Cipher mais on a pas besoin d'instance de la classe pour l'utiliser
@@ -65,16 +65,17 @@ public class Encryption {
 		return bytearray;
 	}
 	
-	public static byte[] encrypt(char[] password,byte[] bytearray){
+	private static byte[] encrypt(char[] password,byte[] bytearray){
 		return crypt(password,bytearray,Cipher.ENCRYPT_MODE);
 	}
 	
-	public static byte[] decrypt(char[] password,byte[] bytearray){
+	private static byte[] decrypt(char[] password,byte[] bytearray){
 		return crypt(password,bytearray,Cipher.DECRYPT_MODE);
 	}
 	
 	private static byte[] byteArrayFromSelectedRectangle(Rectangle[] rectangles,BufferedImage image){
 		String result = "";
+
 		for (int i = 0; i < image.getWidth(); i++) {
 			for (int j = 0; j < image.getHeight(); j++) {
 				for (Rectangle r : rectangles) {
@@ -88,41 +89,39 @@ public class Encryption {
 		return result.getBytes();
 	}
 	
-	private static BufferedImage insertRectanglesInImage(Rectangle[] rectangles,BufferedImage image,byte[] cryptedArray){
+	private static BufferedImage insertRectanglesInImage(Rectangle[] rectangles, BufferedImage image, byte[] cryptedArray){
 		ByteBuffer bb=ByteBuffer.allocate(cryptedArray.length);
 		IntBuffer ib=bb.asIntBuffer();
 		bb.put(cryptedArray);
 		int[] array=ib.array();
-		BufferedImage result=image;
 		
 		for (int i = 0; i < image.getWidth(); i++) {
 			for (int j = 0; j < image.getHeight(); j++) {
 				for (Rectangle r : rectangles) {
 					if (r.contains(new Point(i, j))) {
-						result.setRGB(i, j, array[i*image.getHeight()+j]);
+						image.setRGB(i, j, array[i*image.getHeight()+j]);
 						break;
 					}
 				}
 			}
 		}
-		return result;
+
+		return image;
 		
 	}
 	
-	public static BufferedImage encryptImage(Rectangle[] r,BufferedImage i,char[] password){
-		BufferedImage result=i;
-		byte[] array= byteArrayFromSelectedRectangle(r,i);
+	public static BufferedImage encryptImage(Rectangle[] r, BufferedImage image, char[] password){
+		byte[] array= byteArrayFromSelectedRectangle(r,image);
 		array=encrypt(password,array);
-		result=insertRectanglesInImage(r,i,array); //Tester si ça remet bien les bonnes valeurs
-		return result;
+		image=insertRectanglesInImage(r,image,array); //Tester si ça remet bien les bonnes valeurs
+		return image;
 	}
 	
-	public static BufferedImage decryptImage(Rectangle[] r,BufferedImage i,char[] password){
-		BufferedImage result=i;
-		byte[] array= byteArrayFromSelectedRectangle(r,i);
+	public static BufferedImage decryptImage(Rectangle[] r,BufferedImage image,char[] password){
+		byte[] array= byteArrayFromSelectedRectangle(r,image);
 		array=decrypt(password,array);
-		result=insertRectanglesInImage(r,i,array); 
-		return result;
+		image=insertRectanglesInImage(r,image,array);
+		return image;
 	}
 	
 }

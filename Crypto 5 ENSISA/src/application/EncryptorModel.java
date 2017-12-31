@@ -8,6 +8,11 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+/**
+ * (Composant Modèle du modèle MVC de l'application)
+ * EncryptorModel stocke les informations nécessaires et se met à jour
+ * en fonction de EncryptorController
+ */
 public class EncryptorModel extends JPanel {
 
 	private static final long serialVersionUID = -7000404362747523378L;
@@ -29,14 +34,28 @@ public class EncryptorModel extends JPanel {
         };
     }
 
+    /**
+     * @return l'image chargée (ou non) pour le cryptage ou décryptage
+     */
     BufferedImage getImage() {
         return image;
     }
 
+    /**
+     * @return la zone Rectangle sélectionnée par l'utilisateur
+     */
     Rectangle getSelectionRectangle() {
         return selectionRectangle;
     }
 
+    /**
+     * Affiche l'image et le rectangle de sélection sur la fenêtre
+     * paintComponent est appelée lorsqu'il est nécessaire de mettre à jour
+     * les informations visibles par l'utilisateur, par exemple lorsqu'il
+     * crée et/ou modifie le rectangle de sélection
+     *
+     * @param g composante graphique
+     */
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
@@ -46,30 +65,42 @@ public class EncryptorModel extends JPanel {
         
   }
 
+    /**
+     * Dessine l'image chargée sur la fenêtre
+     * Ne se passe rien si aucune image a été chargée
+     *
+     * @param g2 composante graphique
+     */
     private void drawImage(Graphics2D g2) {
-        if (image != null){
-            g2.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), this);
-	        canvas.setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
-	        JScrollPane sp = new JScrollPane(canvas);
-	        setLayout(new BorderLayout());
-	        add(sp, BorderLayout.CENTER);
-        }
+        if (image == null)
+            return;
+
+        g2.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), this);
+        canvas.setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
+        JScrollPane sp = new JScrollPane(canvas);
+        setLayout(new BorderLayout());
+        add(sp, BorderLayout.CENTER);
     }
 
+    /**
+     * Dessine le rectangle de sélection sur la fenêtre
+     *
+     * @param g2 composante graphique
+     */
     private void drawSelectionRectangle(Graphics2D g2) {
         if (p2 == null || p1 == null)
             return;
 
         g2.setColor(Color.BLACK);
 
-        // calcul de la selection
+        // calcul du rectangle de sélection
         selectionRectangle = new Rectangle((p2.x > p1.x) ? p1.x : p2.x,
                 (p2.y > p1.y) ? p1.y : p2.y,
                 (p2.x > p1.x) ? p2.x - p1.x : p1.x
                         - p2.x, (p2.y > p1.y) ? p2.y
                 - p1.y : p1.y - p2.y);
 
-        // dessine le fond de la selection avec un effet de transparence
+        // transparence de fond
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f));
         g2.fillRect(selectionRectangle.x, selectionRectangle.y, selectionRectangle.width, selectionRectangle.height);
 
@@ -78,6 +109,11 @@ public class EncryptorModel extends JPanel {
         g2.drawRect(selectionRectangle.x, selectionRectangle.y, selectionRectangle.width, selectionRectangle.height);
     }
 
+    /**
+     * Stocke l'image dans le Modèle puis l'affiche sur la fenêtre
+     *
+     * @param imageFile image .png
+     */
     void addImage(File imageFile) {
         try {
             image = ImageIO.read(imageFile);
@@ -87,6 +123,13 @@ public class EncryptorModel extends JPanel {
         repaint();
     }
 
+    /**
+     * Met à jour les points de coordonnées pour le rectangle de sélection
+     * et affiche ensuite la fenêtre
+     *
+     * @param p1 point haut-gauche du rectangle
+     * @param p2 point bas-droite du rectangle
+     */
     void update(Point p1, Point p2) {
         this.p1 = p1;
         this.p2 = p2;

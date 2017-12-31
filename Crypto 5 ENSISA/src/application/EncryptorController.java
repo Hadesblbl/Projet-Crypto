@@ -6,6 +6,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 
+/**
+ * (Composant EncryptorController du modèle MVC de l'application)
+ * EncryptorController réagit aux actions de l'utilisateur:
+ * - clics sur les différents menus
+ * - manipulation de l'image chargée au préalable
+ */
 class EncryptorController implements ActionListener, MouseListener, MouseMotionListener {
 
     private EncryptorModel model;
@@ -33,9 +39,15 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
             case "Crypter":
                 encryptFile();
                 break;
+            case "Décrypter":
+                decryptFile();
+                break;
         }
     }
 
+    /**
+     * Permet de rechercher et d'ouvrir une image .png dans l'explorateur de fichiers
+     */
     private void openFile() {
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter(".png", "png");
@@ -49,10 +61,18 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
         model.addMouseMotionListener(this);
     }
 
+    /**
+     * Quitte l'application
+     */
     private void exitFile() {
         view.dispatchEvent(new WindowEvent(view, WindowEvent.WINDOW_CLOSING));
     }
 
+    /**
+     * Lance le processus de cryptage de la zone d'image sélectionnée
+     * Si aucune zone n'a été définie par l'utilisateur, la fonction ne
+     * retournera rien
+     */
     private void encryptFile() {
         if (model.getImage() == null || model.getSelectionRectangle() == null) {
             System.out.println("To be done");
@@ -62,13 +82,34 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
         //model.encryptionTest();
     }
 
+    /**
+     * Lance le processus de décryptage de la zone sélectionnée
+     * (...)
+     */
+    private void decryptFile() {
+        // JavaDoc à finir en fonction de ce qui est fait
+        System.out.println("To be done");
+    }
+
     /* Interaction image */
 
+    /**
+     * Met à jour les coordonnées du rectangle de sélection lorsque
+     * l'utilisateur clique
+     *
+     * @param e événement de clic
+     */
     @Override
     public void mouseClicked(MouseEvent e) {
         model.update(p1, null);
     }
 
+    /**
+     * Récupère la coordonnée du premier point du rectangle de sélection
+     * lorsque l'utilisateur clique
+     *
+     * @param e événement de clic
+     */
     @Override
     public void mousePressed(MouseEvent e) {
         p1 = e.getPoint();
@@ -83,6 +124,13 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
     @Override
     public void mouseExited(MouseEvent e) {}
 
+    /**
+     * Récupère la coordonnée du second point du rectangle de sélection
+     * lorsque l'utilisateur maintient son curseur appuyé, puis met
+     * à jour les coordonnées des deux points
+     *
+     * @param e événement de clic
+     */
     @Override
     public void mouseDragged(MouseEvent e) {
         p2 = e.getPoint();
