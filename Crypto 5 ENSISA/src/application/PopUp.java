@@ -22,7 +22,7 @@ public class PopUp{
 		//Boite du message d'erreur
 		JOptionPane jop2;
 		jop2= new JOptionPane();
-		jop2.showMessageDialog(null, "Votre mot de passe est incorrecte", "Erreur", jop2.ERROR_MESSAGE);
+		jop2.showMessageDialog(null, "Votre mot de passe est incorrect", "Erreur", jop2.ERROR_MESSAGE);
 		
 		
 		//Boite du message preventif

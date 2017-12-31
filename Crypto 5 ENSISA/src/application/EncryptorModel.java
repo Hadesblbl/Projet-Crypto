@@ -28,7 +28,7 @@ public class EncryptorModel extends JPanel {
 
     EncryptorModel() {
         super();
-        setRectangles(new ArrayList<Rectangle>());
+        setRectangles(new ArrayList<>());
         this.canvas = new JPanel() {
 			private static final long serialVersionUID = 1L;
 
@@ -42,8 +42,8 @@ public class EncryptorModel extends JPanel {
     /**
      * Remet la liste à 0
      */
-    public void clearRectangles(){
-    	setRectangles(new ArrayList<Rectangle>());
+    void clearRectangles(){
+    	setRectangles(new ArrayList<>());
     	p1=null;
     	p2=null;
     	selectionRectangle=null;
@@ -52,7 +52,7 @@ public class EncryptorModel extends JPanel {
     /**
      * Ajoute le rectangle à la liste
      */
-    public void addRectangle(Rectangle r){
+    void addRectangle(Rectangle r){
     	getRectangles().add(r);
     }
     
@@ -111,17 +111,22 @@ public class EncryptorModel extends JPanel {
      * @param g2 composante graphique
      */
     private void drawCryptRectangle(Graphics2D g2) {
-    	g2.setColor(Color.BLACK);
-    	for (Iterator<Rectangle> it=getRectangles().iterator();it.hasNext();){
-    		Rectangle r=it.next();
-    		// transparence de fond
-    		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f));
-    		g2.fillRect(r.x, r.y, r.width, r.height);
+    	if (p1 == null || p2 == null)
+    	    return;
 
-    		// suppression de la transparence pour dessiner la bordure
-    		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-    		g2.drawRect(r.x, r.y, r.width, r.height);
-    	}
+        g2.setColor(Color.BLACK);
+        for (Rectangle r : getRectangles()) {
+            if (r == null)
+                return;
+
+            // transparence de fond
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f));
+            g2.fillRect(r.x, r.y, r.width, r.height);
+
+            // suppression de la transparence pour dessiner la bordure
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+            g2.drawRect(r.x, r.y, r.width, r.height);
+        }
     }
     
     /**
@@ -181,11 +186,11 @@ public class EncryptorModel extends JPanel {
         repaint();
     }
 
-	public ArrayList<Rectangle> getRectangles() {
+	ArrayList<Rectangle> getRectangles() {
 		return rectangles;
 	}
 
-	public void setRectangles(ArrayList<Rectangle> rectangles) {
+	private void setRectangles(ArrayList<Rectangle> rectangles) {
 		this.rectangles = rectangles;
 	}
 }

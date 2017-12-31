@@ -4,8 +4,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -16,19 +14,16 @@ import java.util.Iterator;
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Encryption {
 	/**
 	 * @param password mdp
 	 * @param mode (Cipher.ENCRYPT_MODE ou Cipher.DECRYPT_MODE selon l'utilisation)
-	 * @param crypt (méthode de cryptage)
 	 * @param salt sel
-	 * @param ite (le nombre d'itérations lors de la création de la clé)
 	 * @return
 	 */
-	public static Cipher getCipher(char[] password, int mode, byte[] salt, int ite){ //Pareil que l'autre Cipher mais on a pas besoin d'instance de la classe pour l'utiliser
+	private static Cipher getCipher(char[] password, int mode, byte[] salt) { //Pareil que l'autre Cipher mais on a pas besoin d'instance de la classe pour l'utiliser
 		try {
 			Cipher cipher;
 			IvParameterSpec iv = new IvParameterSpec("testtesttesttest".getBytes("UTF-8"));
@@ -37,8 +32,6 @@ public class Encryption {
 			SecretKey key = keyFact.generateSecret(kSpecs); //On crée la clé secrète
 			SecretKey secret = new SecretKeySpec(key.getEncoded(), "AES");
 			cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-			//TODO: InvalidAlgorithmParameterException pour pSpecs
-			System.out.println("test");
 			cipher.init(mode, secret, iv); //On crée et initialise le Cipher grâce à la clé
 			return cipher;
 
@@ -60,7 +53,7 @@ public class Encryption {
 		//32 11 a2 3c 43 a2 e1 23
 		byte[] salt = { (byte) 0x32, (byte) 0x11, (byte) 0xA2, (byte) 0x3C, (byte) 0x43, (byte) 0xA2, (byte) 0xE1, (byte) 0x23 };
 
-		Cipher cipher = getCipher(password, mode, salt,64);
+		Cipher cipher = getCipher(password, mode, salt);
 		System.out.println("cipher: " + cipher);
 		try {
 			return cipher.doFinal(bytearray);
@@ -97,14 +90,12 @@ public class Encryption {
 	 * @param image
 	 * @return
 	 */
-
 	private static byte[] byteArrayFromSelectedRectangle(ArrayList<Rectangle> rectangles,BufferedImage image){
 		StringBuilder result = new StringBuilder();
 
 		for (int i = 0; i < image.getWidth(); i++) {
 			for (int j = 0; j < image.getHeight(); j++) {
-		    	for (Iterator<Rectangle> it=rectangles.iterator();it.hasNext();){
-		    		Rectangle r=it.next();
+				for (Rectangle r : rectangles) {
 					if (r.contains(new Point(i, j))) {
 						result.append(String.valueOf(image.getRGB(i, j)));
 						break;
@@ -125,10 +116,9 @@ public class Encryption {
 		int nb=0;
 		for (int i = 0; i < image.getWidth(); i++) {
 			for (int j = 0; j < image.getHeight(); j++) {
-		    	for (Iterator<Rectangle> it=rectangles.iterator();it.hasNext();){
-		    		Rectangle r=it.next();
+				for (Rectangle r : rectangles) {
 					if (r.contains(new Point(i, j))) {
-						nb+=1;
+						nb += 1;
 						break;
 					}
 				}
@@ -149,12 +139,11 @@ public class Encryption {
 		
 		for (int i = 0; i < image.getWidth(); i++) {
 			for (int j = 0; j < image.getHeight(); j++) {
-		    	for (Iterator<Rectangle> it=rectangles.iterator();it.hasNext();){
-		    		Rectangle r=it.next();
+				for (Rectangle r : rectangles) {
 					if (r.contains(new Point(i, j))) {
-						int rgb = cryptedArray[index+5]<<40 | cryptedArray[index+4]<<32 | cryptedArray[index+3]<<24 | cryptedArray[index+2]<<16 | cryptedArray[index+1]<<8 | cryptedArray[index];
+						int rgb = cryptedArray[index + 5] << 40 | cryptedArray[index + 4] << 32 | cryptedArray[index + 3] << 24 | cryptedArray[index + 2] << 16 | cryptedArray[index + 1] << 8 | cryptedArray[index];
 						image.setRGB(i, j, rgb);
-						index+=6;
+						index += 6;
 						break;
 					}
 				}

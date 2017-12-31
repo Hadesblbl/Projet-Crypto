@@ -28,6 +28,11 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 
     /* Interaction menu */
 
+    /**
+     * Différentes actions à effectuer en fonction du sous-menu cliqué par l'utilisateur
+     *
+     * @param e événement de clic
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
@@ -44,8 +49,7 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
                 decryptFile();
                 break;
             case "Nettoyer":
-                model.clearRectangles();
-                model.repaint();
+                clearFile();
                 break;
         }
     }
@@ -79,12 +83,12 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
      * retournera rien
      */
     private void encryptFile() {
-        if (model.getImage() == null || model.getRectangles().isEmpty()) {
-            System.out.println("To be done");
+        if (model.getImage() == null || model.getRectangles().isEmpty())
             return;
-        }
+        //TODO: change this
         encryption.Encryption.encryptImage(model.getRectangles(), model.getImage(), "oui".toCharArray());
-        //model.encryptionTest();
+        clearFile();
+        model.repaint();
     }
 
     /**
@@ -94,6 +98,15 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
     private void decryptFile() {
         // JavaDoc à finir en fonction de ce qui est fait
         System.out.println("To be done");
+    }
+
+    /**
+     * Retire les différents rectangles créés à la sélection, cela fait office
+     * de soft reset
+     */
+    private void clearFile() {
+        model.clearRectangles();
+        model.repaint();
     }
 
     /* Interaction image */
