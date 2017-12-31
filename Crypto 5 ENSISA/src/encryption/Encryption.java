@@ -1,5 +1,11 @@
 package encryption;
 
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -66,4 +72,57 @@ public class Encryption {
 	public static byte[] decrypt(char[] password,byte[] bytearray){
 		return crypt(password,bytearray,Cipher.DECRYPT_MODE);
 	}
+	
+	private static byte[] byteArrayFromSelectedRectangle(Rectangle[] rectangles,BufferedImage image){
+		String result = "";
+		for (int i = 0; i < image.getWidth(); i++) {
+			for (int j = 0; j < image.getHeight(); j++) {
+				for (Rectangle r : rectangles) {
+					if (r.contains(new Point(i, j))) {
+						result += String.valueOf(image.getRGB(i, j));
+						break;
+					}
+				}
+			}
+		}
+		return result.getBytes();
+	}
+	
+	private static BufferedImage insertRectanglesInImage(Rectangle[] rectangles,BufferedImage image,byte[] cryptedArray){
+		ByteBuffer bb=ByteBuffer.allocate(cryptedArray.length);
+		IntBuffer ib=bb.asIntBuffer();
+		bb.put(cryptedArray);
+		int[] array=ib.array();
+		BufferedImage result=image;
+		
+		for (int i = 0; i < image.getWidth(); i++) {
+			for (int j = 0; j < image.getHeight(); j++) {
+				for (Rectangle r : rectangles) {
+					if (r.contains(new Point(i, j))) {
+						result.setRGB(i, j, array[i*image.getHeight()+j]);
+						break;
+					}
+				}
+			}
+		}
+		return result;
+		
+	}
+	
+	public static BufferedImage encryptImage(Rectangle[] r,BufferedImage i,char[] password){
+		BufferedImage result=i;
+		byte[] array= byteArrayFromSelectedRectangle(r,i);
+		array=encrypt(password,array);
+		result=insertRectanglesInImage(r,i,array); //Tester si ça remet bien les bonnes valeurs
+		return result;
+	}
+	
+	public static BufferedImage decryptImage(Rectangle[] r,BufferedImage i,char[] password){
+		BufferedImage result=i;
+		byte[] array= byteArrayFromSelectedRectangle(r,i);
+		array=decrypt(password,array);
+		result=insertRectanglesInImage(r,i,array); 
+		return result;
+	}
+	
 }
