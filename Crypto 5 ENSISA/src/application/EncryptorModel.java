@@ -6,6 +6,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import javax.imageio.ImageIO;
 
 /**
@@ -21,11 +24,11 @@ public class EncryptorModel extends JPanel {
     private Point p2 = null;
     private Rectangle selectionRectangle;
     private JPanel canvas;
-    private Rectangle[] rectangles;
+    private ArrayList<Rectangle> rectangles;
 
     EncryptorModel() {
         super();
-        rectangles= new Rectangle[100];
+        setRectangles(new ArrayList<Rectangle>());
         this.canvas = new JPanel() {
 			private static final long serialVersionUID = 1L;
 
@@ -35,7 +38,24 @@ public class EncryptorModel extends JPanel {
             }
         };
     }
+    
+    /**
+     * Remet la liste à 0
+     */
+    public void clearRectangles(){
+    	setRectangles(new ArrayList<Rectangle>());
+    	p1=null;
+    	p2=null;
+    	selectionRectangle=null;
+    }
 
+    /**
+     * Ajoute le rectangle à la liste
+     */
+    public void addRectangle(Rectangle r){
+    	getRectangles().add(r);
+    }
+    
     /**
      * @return l'image chargée (ou non) pour le cryptage ou décryptage
      */
@@ -62,9 +82,10 @@ public class EncryptorModel extends JPanel {
         super.paintComponent(g);
         final Graphics2D g2 = (Graphics2D) g;
         drawImage(g2);
+        drawCryptRectangle(g2);
         drawSelectionRectangle(g2);
-        
   }
+    
     /**
      * Dessine l'image chargée sur la fenêtre
      * Ne se passe rien si aucune image a été chargée
@@ -83,7 +104,26 @@ public class EncryptorModel extends JPanel {
         //TODO: Code mis sous quarantaine parce que je sais pas comment gérer le repaint() (Olivier)
         //this.add(sp, BorderLayout.CENTER);
     }
+    
+    /**
+     * Dessine les rectangle à crypter sur la fenêtre
+     *
+     * @param g2 composante graphique
+     */
+    private void drawCryptRectangle(Graphics2D g2) {
+    	g2.setColor(Color.BLACK);
+    	for (Iterator<Rectangle> it=getRectangles().iterator();it.hasNext();){
+    		Rectangle r=it.next();
+    		// transparence de fond
+    		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f));
+    		g2.fillRect(r.x, r.y, r.width, r.height);
 
+    		// suppression de la transparence pour dessiner la bordure
+    		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+    		g2.drawRect(r.x, r.y, r.width, r.height);
+    	}
+    }
+    
     /**
      * Dessine le rectangle de sélection sur la fenêtre
      *
@@ -98,11 +138,12 @@ public class EncryptorModel extends JPanel {
         g2.setColor(Color.BLACK);
 
         // calcul du rectangle de sélection
-        selectionRectangle = new Rectangle((p2.x > p1.x) ? p1.x : p2.x,
+        selectionRectangle = new Rectangle(
+        		(p2.x > p1.x) ? p1.x : p2.x,
                 (p2.y > p1.y) ? p1.y : p2.y,
-                (p2.x > p1.x) ? p2.x - p1.x : p1.x
-                        - p2.x, (p2.y > p1.y) ? p2.y
-                - p1.y : p1.y - p2.y);
+                (p2.x > p1.x) ? p2.x - p1.x : p1.x - p2.x,
+                (p2.y > p1.y) ? p2.y - p1.y : p1.y - p2.y
+        );
 
         // transparence de fond
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f));
@@ -139,4 +180,12 @@ public class EncryptorModel extends JPanel {
         this.p2 = p2;
         repaint();
     }
+
+	public ArrayList<Rectangle> getRectangles() {
+		return rectangles;
+	}
+
+	public void setRectangles(ArrayList<Rectangle> rectangles) {
+		this.rectangles = rectangles;
+	}
 }
