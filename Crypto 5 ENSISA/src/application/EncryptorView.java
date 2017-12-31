@@ -4,8 +4,6 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * (Composant Vue du modèle MVC de l'application)
@@ -13,7 +11,7 @@ import java.util.Observer;
  * au lancement, c'est-à-dire de son dimensionnement, de ses menus et des
  * raccourcis menus qui leurs sont associés
  */
-public class EncryptorView extends JFrame {
+class EncryptorView extends JFrame {
 
 	private static final long serialVersionUID = 9055585013467848278L;
 
