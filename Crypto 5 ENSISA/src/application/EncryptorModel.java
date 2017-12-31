@@ -70,6 +70,13 @@ public class EncryptorModel extends JPanel {
     Rectangle getSelectionRectangle() {
         return selectionRectangle;
     }
+    
+    /**
+     * @param r remplace le selectionRectangle
+     */
+    void setSelectionRectangle(Rectangle r){
+    	selectionRectangle=r;
+    }
 
     /**
      * Affiche l'image et le rectangle de sélection sur la fenêtre

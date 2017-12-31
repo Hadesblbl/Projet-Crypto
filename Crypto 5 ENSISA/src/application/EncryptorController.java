@@ -191,7 +191,6 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		model.update(p1, null);
 	}
 
 	/**
@@ -207,7 +206,9 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		model.addRectangle(model.getSelectionRectangle());
+		if (model.getSelectionRectangle()!=null)
+			model.addRectangle(model.getSelectionRectangle());
+		model.setSelectionRectangle(null);
 	}
 
 	@Override
