@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -65,6 +64,7 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 		JFileChooser fileChooser = new JFileChooser();
 		FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter(".png", "png");
 		fileChooser.setFileFilter(extensionFilter);
+		fileChooser.setDialogTitle("Ouvrir l'image PNG à crypter");
 
 		if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION)
 			model.addImage(new File(fileChooser.getSelectedFile().getAbsolutePath()));
@@ -106,7 +106,6 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 			FileWriter fw = new FileWriter(fileChooser.getSelectedFile()+".png");
 			fw.write(new String(b));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}//ajouter les metadata
 		//proposer d'enregistrer
@@ -133,7 +132,6 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 			fr.close();
 			return cryptedIMG;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return cryptedIMG;
