@@ -75,7 +75,7 @@ public class CryptedImage {
 		}
 	}
 	
-	public String readMetadata(byte[] imageData, String key) throws IOException{
+	public String readMetadata(byte[] imageData) throws IOException{
 		ImageReader imageReader = ImageIO.getImageReadersByFormatName("png").next();
 
 	    imageReader.setInput(ImageIO.createImageInputStream(new ByteArrayInputStream(imageData)), true);

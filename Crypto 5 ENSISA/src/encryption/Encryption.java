@@ -175,8 +175,7 @@ public class Encryption {
 	public static BufferedImage encryptImage(ArrayList<Rectangle> r, BufferedImage image, char[] password){
 		byte[] array= byteArrayFromSelectedRectangle(r,image);
 		array=encrypt(password,array);
-		image=insertRectanglesInImage(r,image,array); //Tester si ça remet bien les bonnes valeurs
-
+		image=insertRectanglesInImage(r,image,array);
 		return image;
 	}
 	
