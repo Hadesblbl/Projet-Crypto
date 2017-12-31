@@ -13,7 +13,7 @@ import java.util.Observer;
  * au lancement, c'est-à-dire de son dimensionnement, de ses menus et des
  * raccourcis menus qui leurs sont associés
  */
-public class EncryptorView extends JFrame implements Observer {
+public class EncryptorView extends JFrame {
 
 	private static final long serialVersionUID = 9055585013467848278L;
 
@@ -126,10 +126,5 @@ public class EncryptorView extends JFrame implements Observer {
     void addController(EncryptorController controller) {
         for (JMenuItem item : menuItems)
             item.addActionListener(controller);
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        encryptorModel.repaint();
     }
 }
