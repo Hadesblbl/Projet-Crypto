@@ -70,6 +70,14 @@ public class EncryptorModel extends JPanel {
         this.imageFile = imageFile;
     }
 
+    ArrayList<Rectangle> getRectangles() {
+        return this.rectangles;
+    }
+
+    private void setRectangles(ArrayList<Rectangle> rectangles) {
+        this.rectangles = rectangles;
+    }
+
     public String getPath() {
         return this.path;
     }
@@ -125,7 +133,21 @@ public class EncryptorModel extends JPanel {
         drawImage(g2);
         drawCryptRectangle(g2);
         drawSelectionRectangle(g2);
-  }
+    }
+
+    /**
+     * Stocke l'image dans le Modèle puis l'affiche sur la fenêtre
+     *
+     * @param imageFile image .png
+     */
+    void addImage(File imageFile) {
+        try {
+            setImage(ImageIO.read(imageFile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        repaint();
+    }
     
     /**
      * Dessine l'image chargée sur la fenêtre
@@ -182,36 +204,42 @@ public class EncryptorModel extends JPanel {
         }
 
         g2.setColor(Color.BLACK);
+        calculateSelectionRectangle();
+        setRectangleTransparency(g2);
+        setRectangleBorders(g2);
+    }
 
-        // calcul du rectangle de sélection
+    /**
+     * Calcule les propriétés du rectangle de sélection (hauteur, largeur) en fonction des points p1 et p2
+     */
+    private void calculateSelectionRectangle() {
         selectionRectangle = new Rectangle(
-        		(p2.x > p1.x) ? p1.x : p2.x,
+                (p2.x > p1.x) ? p1.x : p2.x,
                 (p2.y > p1.y) ? p1.y : p2.y,
                 (p2.x > p1.x) ? p2.x - p1.x : p1.x - p2.x,
                 (p2.y > p1.y) ? p2.y - p1.y : p1.y - p2.y
         );
+    }
 
-        // transparence de fond
+
+    /**
+     * Calcule et affiche la transparence de fond du rectangle de sélection
+     *
+     * @param g2 composante graphique
+     */
+    private void setRectangleTransparency(Graphics2D g2) {
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f));
         g2.fillRect(selectionRectangle.x, selectionRectangle.y, selectionRectangle.width, selectionRectangle.height);
-
-        // suppression de la transparence pour dessiner la bordure
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        g2.drawRect(selectionRectangle.x, selectionRectangle.y, selectionRectangle.width, selectionRectangle.height);
     }
 
     /**
-     * Stocke l'image dans le Modèle puis l'affiche sur la fenêtre
+     * Calcule et affiche la bordure du rectangle de sélection
      *
-     * @param imageFile image .png
+     * @param g2 composante graphique
      */
-    void addImage(File imageFile) {
-        try {
-            setImage(ImageIO.read(imageFile));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } 
-        repaint();
+    private void setRectangleBorders(Graphics2D g2) {
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        g2.drawRect(selectionRectangle.x, selectionRectangle.y, selectionRectangle.width, selectionRectangle.height);
     }
 
     /**
@@ -226,14 +254,6 @@ public class EncryptorModel extends JPanel {
         this.p2 = p2;
         repaint();
     }
-
-	ArrayList<Rectangle> getRectangles() {
-		return this.rectangles;
-	}
-
-	private void setRectangles(ArrayList<Rectangle> rectangles) {
-		this.rectangles = rectangles;
-	}
 
     /**
      * @return true si on a des rectangles en mémoire dans Model

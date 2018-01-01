@@ -155,7 +155,7 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 			//Fin d'enregistrement de l'image
 			
 			model.setImage(img);
-			view.resizeFrame(); //On affiche l'image
+			view.resizeFrame();
 			
 		} catch (IOException e) {
 			e.printStackTrace();

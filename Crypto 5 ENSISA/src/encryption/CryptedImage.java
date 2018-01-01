@@ -83,8 +83,8 @@ public class CryptedImage {
 	    //adding metadata
 	    IIOMetadata metadata = writer.getDefaultImageMetadata(typeSpecifier, writeParam);
 
-	    IIOMetadataNode text = new IIOMetadataNode("tEXT");
-    	IIOMetadataNode textEntry = new IIOMetadataNode("tEXtEntry");
+	    IIOMetadataNode text = new IIOMetadataNode("Text");
+    	IIOMetadataNode textEntry = new IIOMetadataNode("TextEntry");
     	StringBuilder area = new StringBuilder();
 	    for(Rectangle rect : selectedAreas){
 	    	area.append(rect.toString());
