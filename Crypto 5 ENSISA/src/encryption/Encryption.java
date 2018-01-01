@@ -204,4 +204,10 @@ public class Encryption {
 		byte[] array= byteArrayFromSelectedRectangle(r,image);
 		return array.equals(encrypt(password,decrypt(password,array)));
 	}
+	
+	public static boolean testGetPixels(ArrayList<Rectangle> r,BufferedImage image){
+		byte[] array=byteArrayFromSelectedRectangle(r,image);
+		BufferedImage i=insertRectanglesInImage(r, image, array);
+		return array.equals(i);
+	}
 }

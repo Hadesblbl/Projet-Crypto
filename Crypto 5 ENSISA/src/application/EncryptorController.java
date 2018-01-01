@@ -10,6 +10,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -18,7 +19,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.stream.ImageOutputStream;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -100,6 +107,7 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 	private void encryptFile() {
 		//System.out.println(encryption.Encryption.test2(model.getRectangles(),model.getImage(),"oui".toCharArray()));
 		//model.setImage(encryption.Encryption.test(model.getRectangles(),model.getImage(),"oui".toCharArray()));
+		//System.out.println(encryption.Encryption.testGetPixels(model.getRectangles(), model.getImage()));
 		if (!model.isCryptable())	return;
 
 		char[] password = PopUp.PopupIdentification();
@@ -158,10 +166,8 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 	 * (...)
 	 */
 	private void decryptFile() {
-		// JavaDoc à finir en fonction de ce qui est fait
-		//Fonction à refaire/finir/perfectionner
-
 		try {
+			//Début de choix du fichier à décrypter
 			JFileChooser fileChooser = new JFileChooser();
 			FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter(".png", "png");
 			fileChooser.setFileFilter(extensionFilter);
@@ -169,27 +175,47 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 			File chosen= null;
 			if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION)
 				chosen= new File(fileChooser.getSelectedFile().getAbsolutePath());
+			//Fin de choix du fichier à décrypter
 			if (chosen == null) throw new AssertionError();
 			byte[] cryptedIMG= fileToByte(chosen);
-
-			char[] password=PopUp.PopupIdentification(); //on set le mdp avec la fenêtre popup
 			
-
-			ArrayList<Rectangle> rectCrypte= new ArrayList<>();// récup metadata ici
+			//On choisit le mot de passe
+			char[] password=PopUp.PopupIdentification();
+			
+			//Début de récupération de la liste des rectangles
+			ArrayList<Rectangle> rectCrypte= new ArrayList<>();
 			String list=CryptedImage.readMetadata(cryptedIMG);
-			if (list==null){
-				list="";
+			if (list!=null){
+				//System.out.println(list);
+				String[] rect=list.split("\n");
+				for(String s:rect){
+					rectCrypte.add(stringToRect(s));
+				}
 			}
-			System.out.println(list);
-			String[] rect=list.split("\n");
-			for(String s:rect){
-				rectCrypte.add(stringToRect(s));
-			}
-
+			//Fin de récupération de la liste des rectangles
 			
-			model.setImage(encryption.Encryption.decryptImage(rectCrypte, ImageIO.read(chosen), password));
-			view.resizeFrame();
-			//enregistrer l'image dans le fichier correspondant
+			//Début d'enregistrement de l'image
+			BufferedImage img=encryption.Encryption.decryptImage(rectCrypte, ImageIO.read(chosen), password);
+			try {
+				ImageWriter writer = ImageIO.getImageWritersByFormatName("png").next();
+			    ImageWriteParam writeParam = writer.getDefaultWriteParam();
+			    ImageTypeSpecifier typeSpecifier = ImageTypeSpecifier.createFromBufferedImageType(BufferedImage.TYPE_INT_RGB);
+			    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			    ImageOutputStream stream = ImageIO.createImageOutputStream(baos);
+			    writer.setOutput(stream); // on dit qu'on écrit dans baos
+			    IIOMetadata metadata = writer.getDefaultImageMetadata(typeSpecifier, writeParam);
+			    writer.write(metadata, new IIOImage(img, null, metadata), writeParam); //pour récupérer l'image sous forme d'un byteArray
+			    
+				FileOutputStream fos = new FileOutputStream(model.path);
+				fos.write(baos.toByteArray());
+				fos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} 
+			//Fin d'enregistrement de l'image
+			
+			model.setImage(img);
+			view.resizeFrame(); //On affiche l'image
 			
 		} catch (IOException e) {
 			e.printStackTrace();
