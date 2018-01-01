@@ -95,6 +95,7 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 		if (!model.isCryptable())	return;
 
 		model.setPassword();
+
 		BufferedImage encryptedIMG = encryption.Encryption.encryptImage(model.getRectangles(), model.getImage(), model.getPassword()); //L'image encryptée est celle qu'on a ouvert précédemment
 		byte[] b;
 		

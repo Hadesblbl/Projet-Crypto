@@ -178,17 +178,9 @@ public class EncryptorModel extends JPanel {
     	    return;
 
         g2.setColor(Color.BLACK);
-        for (Rectangle r : getRectangles()) {
-            if (r == null)
-                return;
-
-            // transparence de fond
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f));
-            g2.fillRect(r.x, r.y, r.width, r.height);
-
-            // suppression de la transparence pour dessiner la bordure
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-            g2.drawRect(r.x, r.y, r.width, r.height);
+        for (Rectangle r : rectangles) {
+            setRectangleTransparency(r, g2);
+            setRectangleBorders(r, g2);
         }
     }
     
@@ -205,8 +197,8 @@ public class EncryptorModel extends JPanel {
 
         g2.setColor(Color.BLACK);
         calculateSelectionRectangle();
-        setRectangleTransparency(g2);
-        setRectangleBorders(g2);
+        setRectangleTransparency(selectionRectangle, g2);
+        setRectangleBorders(selectionRectangle, g2);
     }
 
     /**
@@ -223,23 +215,25 @@ public class EncryptorModel extends JPanel {
 
 
     /**
-     * Calcule et affiche la transparence de fond du rectangle de sélection
+     * Calcule et affiche la transparence de fond du rectangle
      *
+     * @param r rectangle cible
      * @param g2 composante graphique
      */
-    private void setRectangleTransparency(Graphics2D g2) {
+    private void setRectangleTransparency(Rectangle r, Graphics2D g2) {
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f));
-        g2.fillRect(selectionRectangle.x, selectionRectangle.y, selectionRectangle.width, selectionRectangle.height);
+        g2.fillRect(r.x, r.y, r.width, r.height);
     }
 
     /**
-     * Calcule et affiche la bordure du rectangle de sélection
+     * Calcule et affiche la bordure du rectangle
      *
+     * @param r rectangle cible
      * @param g2 composante graphique
      */
-    private void setRectangleBorders(Graphics2D g2) {
+    private void setRectangleBorders(Rectangle r, Graphics2D g2) {
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        g2.drawRect(selectionRectangle.x, selectionRectangle.y, selectionRectangle.width, selectionRectangle.height);
+        g2.drawRect(r.x, r.y, r.width, r.height);
     }
 
     /**
@@ -259,6 +253,6 @@ public class EncryptorModel extends JPanel {
      * @return true si on a des rectangles en mémoire dans Model
      */
 	boolean isCryptable() {
-        return (!this.getRectangles().isEmpty()) && this.getImage() != null;
+        return !rectangles.isEmpty() && image != null;
     }
 }
