@@ -19,13 +19,18 @@ import javax.imageio.ImageIO;
 public class EncryptorModel extends JPanel {
 
 	private static final long serialVersionUID = -7000404362747523378L;
+	private File imageFile = null;
 	private BufferedImage image = null;
+
     private Point p1 = null;
     private Point p2 = null;
     private Rectangle selectionRectangle;
+
     private JPanel canvas;
     private ArrayList<Rectangle> rectangles;
-    public String path;
+    private String path;
+
+    private char[] password;
 
     EncryptorModel() {
         super();
@@ -39,7 +44,14 @@ public class EncryptorModel extends JPanel {
             }
         };
     }
-    
+
+    /**
+     * Ajoute le rectangle à la liste
+     */
+    void addRectangle(Rectangle r){
+        getRectangles().add(r);
+    }
+
     /**
      * Remet la liste à 0
      */
@@ -50,13 +62,22 @@ public class EncryptorModel extends JPanel {
     	selectionRectangle=null;
     }
 
-    /**
-     * Ajoute le rectangle à la liste
-     */
-    void addRectangle(Rectangle r){
-    	getRectangles().add(r);
+    public File getImageFile() {
+        return this.imageFile;
     }
-    
+
+    public void setImageFile(File imageFile) {
+        this.imageFile = imageFile;
+    }
+
+    public String getPath() {
+        return this.path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     /**
      * @return l'image chargée (ou non) pour le cryptage ou décryptage
      */
@@ -80,6 +101,14 @@ public class EncryptorModel extends JPanel {
      */
     void setSelectionRectangle(Rectangle r){
     	selectionRectangle=r;
+    }
+
+    public char[] getPassword() {
+        return this.password;
+    }
+
+    public void setPassword() {
+        this.password = PopUp.PopupIdentification();
     }
 
     /**
