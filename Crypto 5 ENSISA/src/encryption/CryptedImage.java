@@ -5,7 +5,11 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.IIOImage;
@@ -27,6 +31,52 @@ public class CryptedImage {
 
 	private static final String STANDARD_METADATA_FORMAT = "javax_imageio_1.0";
     
+	public static void writeMetadataInFile(List<Rectangle> selectedAreas, BufferedImage image){
+		try {
+			File f= new File("resources/metadata.txt");
+			FileOutputStream fos = new FileOutputStream(f.getAbsolutePath());
+			for(Rectangle r:selectedAreas){
+				String s=r.x+","+r.y+","+r.width+","+r.height+"\n";
+				fos.write(s.getBytes());
+			}
+			fos.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static List<Rectangle> readMetadataInFile(){
+		try {
+			File f= new File("resources/metadata.txt");
+			FileInputStream fos = new FileInputStream(f.getAbsolutePath());
+			int n;
+			int indice=0;
+			byte[] file= new byte[fos.available()];
+			while ((n=fos.read()) != -1){
+				file[indice]= (byte) n;
+				indice++;
+			}
+			fos.close();
+			
+			String infos=new String(file);
+			ArrayList<Rectangle> r= new ArrayList<Rectangle>();
+			for(String s:infos.split("\n")){
+				String[] value=s.split(",");
+				int x=Integer.parseInt(value[0]);
+				int y=Integer.parseInt(value[1]);
+				int width=Integer.parseInt(value[2]);
+				int height=Integer.parseInt(value[3]);
+				r.add(new Rectangle(x,y,width,height));
+			}
+			return r;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public static byte[] writeMetadata(List<Rectangle> selectedAreas, BufferedImage image) throws IOException {
 		ImageWriter writer = ImageIO.getImageWritersByFormatName("png").next();
 	    ImageWriteParam writeParam = writer.getDefaultWriteParam();
@@ -35,25 +85,13 @@ public class CryptedImage {
 	    //adding metadata
 	    IIOMetadata metadata = writer.getDefaultImageMetadata(typeSpecifier, writeParam);
 
-	    IIOMetadataNode textEntry = new IIOMetadataNode("tEXTeNTRY");
-	    
-	    StringBuilder area = new StringBuilder();
-	    for(Rectangle rect : selectedAreas){
-	    	area.append(rect.x);
-    		area.append(" ");
-    		area.append(rect.y);
-    		area.append(" ");
-    		area.append(rect.width);
-    		area.append(" ");
-    		area.append(rect.height);
-	    	area.append("\n");
-	    }
-	    
-	    textEntry.setAttribute("value", area.toString());
-	    
 	    IIOMetadataNode text = new IIOMetadataNode("tEXT");
-	    text.appendChild(textEntry);
-
+    	IIOMetadataNode textEntry = new IIOMetadataNode("tEXtEntry");
+    	StringBuilder area = new StringBuilder();
+	    for(Rectangle rect : selectedAreas){
+	    	area.append(rect.toString());
+	    }
+    	textEntry.setAttribute("value", area.toString());
 	    IIOMetadataNode root = new IIOMetadataNode(STANDARD_METADATA_FORMAT);
 	    root.appendChild(text);
 
@@ -79,12 +117,16 @@ public class CryptedImage {
 	    String cryptedAreas = null;
 	    
 	    IIOMetadataNode nodes = (IIOMetadataNode) metadata.getAsTree(STANDARD_METADATA_FORMAT);
-	    System.out.println(nodes.getAttributes());
+	    for(int i=0;i<nodes.getLength();i++){
+	    	System.out.println(nodes.item(i).getNodeName());
+	    }
 	    if (nodes.getElementsByTagName("Text").getLength()>0){
 	    	IIOMetadataNode text = (IIOMetadataNode) nodes.getElementsByTagName("Text").item(0);
 	    	IIOMetadataNode data = (IIOMetadataNode) text.getElementsByTagName("TextEntry").item(0);
-		    cryptedAreas=data.getAttribute("value");
+	    	cryptedAreas=data.getAttribute("value");
+	    	System.out.println("metadata lues");
 	    }
+	    
 	    return cryptedAreas;
 	}
 }

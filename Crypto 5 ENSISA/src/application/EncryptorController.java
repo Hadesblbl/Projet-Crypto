@@ -98,6 +98,8 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 	 * retournera rien
 	 */
 	private void encryptFile() {
+		//System.out.println(encryption.Encryption.test2(model.getRectangles(),model.getImage(),"oui".toCharArray()));
+		//model.setImage(encryption.Encryption.test(model.getRectangles(),model.getImage(),"oui".toCharArray()));
 		if (!model.isCryptable())	return;
 
 		char[] password = PopUp.PopupIdentification();
@@ -107,13 +109,12 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 		try {
 			b = CryptedImage.writeMetadata(model.getRectangles(), encryptedIMG);
 			FileOutputStream fos = new FileOutputStream(model.path);
-			fos.write(b);
+			fos.write(b);//on remplace l'image courante par l'image cryptée
 			fos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//proposer d'enregistrer
-
+		
 		clearFile();
 		model.repaint();
 	}
@@ -147,8 +148,6 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 	private Rectangle stringToRect(String s){
 		String[] value=s.split(" ");
 		if (value.length != 4){
-			System.out.println("erreur: "+value.length+" valeur(s) au lieu de 4");
-			System.out.println(s);
 			return new Rectangle(0,0,0,0);
 		}
 		return new Rectangle(Integer.parseInt(value[0]),Integer.parseInt(value[1]),Integer.parseInt(value[2]),Integer.parseInt(value[3]));
@@ -181,6 +180,7 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 			if (list==null){
 				list="";
 			}
+			System.out.println(list);
 			String[] rect=list.split("\n");
 			for(String s:rect){
 				rectCrypte.add(stringToRect(s));
