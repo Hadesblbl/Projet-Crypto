@@ -1,5 +1,6 @@
 package encryption;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -56,7 +57,7 @@ public class Encryption {
 	 * @param mode
 	 * @return 
 	 */
-	private static byte[] encrypt(char[] password,byte[] bytearray){	
+	static byte[] encrypt(char[] password,byte[] bytearray){	
 		//32 11 a2 3c 43 a2 e1 23
 		byte[] salt = { (byte) 0x32, (byte) 0x11, (byte) 0xA2, (byte) 0x3C, (byte) 0x43, (byte) 0xA2, (byte) 0xE1, (byte) 0x23 };
 
@@ -77,7 +78,7 @@ public class Encryption {
 	 * @param bytearray
 	 * @return
 	 */
-	private static byte[] decrypt(char[] password,byte[] bytearray){
+	static byte[] decrypt(char[] password,byte[] bytearray){
 			Cipher cipher = getCipher(password, Cipher.DECRYPT_MODE, salt);
 			System.out.println("cipher: " + cipher);
 			try {
@@ -89,20 +90,23 @@ public class Encryption {
 		}
 	
 	/**
-	 * retourne un tableau de byte à partir des rectangles sélectionnés
+	 * retourne un tableau de byte à partir des rectangles sélectionnés, tous les groupes de 3 bytes représentent 1 pixel
 	 * @param rectangles
 	 * @param image
 	 * @return
 	 */
 	private static byte[] byteArrayFromSelectedRectangle(ArrayList<Rectangle> rectangles,BufferedImage image){
-		StringBuilder result = new StringBuilder();
+		Color couleur;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		for (int i = 0; i < image.getWidth(); i++) {
 			for (int j = 0; j < image.getHeight(); j++) {
 				for (Rectangle r : rectangles) {
 					if (r.contains(new Point(i, j))) {
-						baos.write(image.getRGB(i, j));
-						//result.append(String.valueOf(image.getRGB(i, j)));
+						couleur=new Color(image.getRGB(i, j));
+						//On stocke les 3 couleurs dans 1 byte chacune
+						baos.write(couleur.getRed());
+						baos.write(couleur.getGreen());
+						baos.write(couleur.getBlue());
 						break;
 					}
 				}
@@ -139,19 +143,17 @@ public class Encryption {
 	 * @param cryptedArray
 	 * @return
 	 */
-	private static BufferedImage insertRectanglesInImage(ArrayList<Rectangle> rectangles, BufferedImage image, byte[] cryptedArray){
+	static BufferedImage insertRectanglesInImage(ArrayList<Rectangle> rectangles, BufferedImage image, byte[] cryptedArray){
 		int index=0;
-		System.out.println("------------------------------");
+		System.out.println("Changement du contenu de l'image");
+		Color couleur;
 		for (int i = 0; i < image.getWidth(); i++) {
 			for (int j = 0; j < image.getHeight(); j++) {
 				for (Rectangle r : rectangles) {
 					if (r.contains(new Point(i, j))) {
-						if (index+5<cryptedArray.length){
-							//int rgb = cryptedArray[index + 5] << 40 | cryptedArray[index + 4] << 32 | cryptedArray[index + 3] << 24 | cryptedArray[index + 2] << 16 | cryptedArray[index + 1] << 8 | cryptedArray[index];
-							image.setRGB(i, j, cryptedArray[index]);
-							//System.out.println(String.valueOf(rgb));
-						}
-						index += 1;
+						couleur=new Color(cryptedArray[index] & 0xFF,cryptedArray[index+1] & 0xFF,cryptedArray[index+2] & 0xFF);
+						image.setRGB(i, j, couleur.getRGB());
+						index += 3;
 						break;
 					}
 				}
