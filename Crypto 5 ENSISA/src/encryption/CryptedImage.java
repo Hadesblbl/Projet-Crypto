@@ -41,7 +41,6 @@ public class CryptedImage {
 			}
 			fos.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -60,7 +59,7 @@ public class CryptedImage {
 			fos.close();
 			
 			String infos=new String(file);
-			ArrayList<Rectangle> r= new ArrayList<Rectangle>();
+			ArrayList<Rectangle> r= new ArrayList<>();
 			for(String s:infos.split("\n")){
 				String[] value=s.split(",");
 				int x=Integer.parseInt(value[0]);
@@ -71,7 +70,6 @@ public class CryptedImage {
 			}
 			return r;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -85,8 +83,8 @@ public class CryptedImage {
 	    //adding metadata
 	    IIOMetadata metadata = writer.getDefaultImageMetadata(typeSpecifier, writeParam);
 
-	    IIOMetadataNode text = new IIOMetadataNode("tEXT");
-    	IIOMetadataNode textEntry = new IIOMetadataNode("tEXtEntry");
+	    IIOMetadataNode text = new IIOMetadataNode("Text");
+    	IIOMetadataNode textEntry = new IIOMetadataNode("TextEntry");
     	StringBuilder area = new StringBuilder();
 	    for(Rectangle rect : selectedAreas){
 	    	area.append(rect.toString());

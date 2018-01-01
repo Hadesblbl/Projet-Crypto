@@ -17,11 +17,9 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.codec.binary.Base64;
-
 public class Encryption {
 
-	final static byte[] salt = { (byte) 0x32, (byte) 0x11, (byte) 0xA2, (byte) 0x3C, (byte) 0x43, (byte) 0xA2, (byte) 0xE1, (byte) 0x23 };
+	private final static byte[] salt = { (byte) 0x32, (byte) 0x11, (byte) 0xA2, (byte) 0x3C, (byte) 0x43, (byte) 0xA2, (byte) 0xE1, (byte) 0x23 };
 
 	/**
 	 * @param password mdp
@@ -54,7 +52,6 @@ public class Encryption {
 	 * encrypte bytearray
 	 * @param password
 	 * @param bytearray
-	 * @param mode
 	 * @return 
 	 */
 	static byte[] encrypt(char[] password,byte[] bytearray){	

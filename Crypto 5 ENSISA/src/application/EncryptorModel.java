@@ -19,13 +19,18 @@ import javax.imageio.ImageIO;
 public class EncryptorModel extends JPanel {
 
 	private static final long serialVersionUID = -7000404362747523378L;
+	private File imageFile = null;
 	private BufferedImage image = null;
+
     private Point p1 = null;
     private Point p2 = null;
     private Rectangle selectionRectangle;
+
     private JPanel canvas;
     private ArrayList<Rectangle> rectangles;
-    public String path;
+    private String path;
+
+    private char[] password;
 
     EncryptorModel() {
         super();
@@ -39,7 +44,14 @@ public class EncryptorModel extends JPanel {
             }
         };
     }
-    
+
+    /**
+     * Ajoute le rectangle à la liste
+     */
+    void addRectangle(Rectangle r){
+        getRectangles().add(r);
+    }
+
     /**
      * Remet la liste à 0
      */
@@ -50,13 +62,30 @@ public class EncryptorModel extends JPanel {
     	selectionRectangle=null;
     }
 
-    /**
-     * Ajoute le rectangle à la liste
-     */
-    void addRectangle(Rectangle r){
-    	getRectangles().add(r);
+    public File getImageFile() {
+        return this.imageFile;
     }
-    
+
+    public void setImageFile(File imageFile) {
+        this.imageFile = imageFile;
+    }
+
+    ArrayList<Rectangle> getRectangles() {
+        return this.rectangles;
+    }
+
+    private void setRectangles(ArrayList<Rectangle> rectangles) {
+        this.rectangles = rectangles;
+    }
+
+    public String getPath() {
+        return this.path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     /**
      * @return l'image chargée (ou non) pour le cryptage ou décryptage
      */
@@ -82,6 +111,14 @@ public class EncryptorModel extends JPanel {
     	selectionRectangle=r;
     }
 
+    public char[] getPassword() {
+        return this.password;
+    }
+
+    public void setPassword() {
+        this.password = PopUp.PopupIdentification();
+    }
+
     /**
      * Affiche l'image et le rectangle de sélection sur la fenêtre
      * paintComponent est appelée lorsqu'il est nécessaire de mettre à jour
@@ -96,7 +133,21 @@ public class EncryptorModel extends JPanel {
         drawImage(g2);
         drawCryptRectangle(g2);
         drawSelectionRectangle(g2);
-  }
+    }
+
+    /**
+     * Stocke l'image dans le Modèle puis l'affiche sur la fenêtre
+     *
+     * @param imageFile image .png
+     */
+    void addImage(File imageFile) {
+        try {
+            setImage(ImageIO.read(imageFile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        repaint();
+    }
     
     /**
      * Dessine l'image chargée sur la fenêtre
@@ -127,17 +178,9 @@ public class EncryptorModel extends JPanel {
     	    return;
 
         g2.setColor(Color.BLACK);
-        for (Rectangle r : getRectangles()) {
-            if (r == null)
-                return;
-
-            // transparence de fond
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f));
-            g2.fillRect(r.x, r.y, r.width, r.height);
-
-            // suppression de la transparence pour dessiner la bordure
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-            g2.drawRect(r.x, r.y, r.width, r.height);
+        for (Rectangle r : rectangles) {
+            setRectangleTransparency(r, g2);
+            setRectangleBorders(r, g2);
         }
     }
     
@@ -153,36 +196,44 @@ public class EncryptorModel extends JPanel {
         }
 
         g2.setColor(Color.BLACK);
+        calculateSelectionRectangle();
+        setRectangleTransparency(selectionRectangle, g2);
+        setRectangleBorders(selectionRectangle, g2);
+    }
 
-        // calcul du rectangle de sélection
+    /**
+     * Calcule les propriétés du rectangle de sélection (hauteur, largeur) en fonction des points p1 et p2
+     */
+    private void calculateSelectionRectangle() {
         selectionRectangle = new Rectangle(
-        		(p2.x > p1.x) ? p1.x : p2.x,
+                (p2.x > p1.x) ? p1.x : p2.x,
                 (p2.y > p1.y) ? p1.y : p2.y,
                 (p2.x > p1.x) ? p2.x - p1.x : p1.x - p2.x,
                 (p2.y > p1.y) ? p2.y - p1.y : p1.y - p2.y
         );
+    }
 
-        // transparence de fond
+
+    /**
+     * Calcule et affiche la transparence de fond du rectangle
+     *
+     * @param r rectangle cible
+     * @param g2 composante graphique
+     */
+    private void setRectangleTransparency(Rectangle r, Graphics2D g2) {
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f));
-        g2.fillRect(selectionRectangle.x, selectionRectangle.y, selectionRectangle.width, selectionRectangle.height);
-
-        // suppression de la transparence pour dessiner la bordure
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        g2.drawRect(selectionRectangle.x, selectionRectangle.y, selectionRectangle.width, selectionRectangle.height);
+        g2.fillRect(r.x, r.y, r.width, r.height);
     }
 
     /**
-     * Stocke l'image dans le Modèle puis l'affiche sur la fenêtre
+     * Calcule et affiche la bordure du rectangle
      *
-     * @param imageFile image .png
+     * @param r rectangle cible
+     * @param g2 composante graphique
      */
-    void addImage(File imageFile) {
-        try {
-            setImage(ImageIO.read(imageFile));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } 
-        repaint();
+    private void setRectangleBorders(Rectangle r, Graphics2D g2) {
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        g2.drawRect(r.x, r.y, r.width, r.height);
     }
 
     /**
@@ -198,18 +249,10 @@ public class EncryptorModel extends JPanel {
         repaint();
     }
 
-	ArrayList<Rectangle> getRectangles() {
-		return this.rectangles;
-	}
-
-	private void setRectangles(ArrayList<Rectangle> rectangles) {
-		this.rectangles = rectangles;
-	}
-
     /**
      * @return true si on a des rectangles en mémoire dans Model
      */
 	boolean isCryptable() {
-        return (!this.getRectangles().isEmpty()) && this.getImage() != null;
+        return !rectangles.isEmpty() && image != null;
     }
 }
