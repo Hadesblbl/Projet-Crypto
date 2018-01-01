@@ -59,7 +59,7 @@ public class Encryption {
 		byte[] salt = { (byte) 0x32, (byte) 0x11, (byte) 0xA2, (byte) 0x3C, (byte) 0x43, (byte) 0xA2, (byte) 0xE1, (byte) 0x23 };
 
 		Cipher cipher = getCipher(password, Cipher.ENCRYPT_MODE, salt);
-		System.out.println("cipher: " + cipher);
+		//System.out.println("cipher: " + cipher);
 		try {
 			return cipher.doFinal(bytearray);
 		} catch (IllegalBlockSizeException | BadPaddingException e) {
@@ -77,7 +77,7 @@ public class Encryption {
 	 */
 	static byte[] decrypt(char[] password,byte[] bytearray){
 			Cipher cipher = getCipher(password, Cipher.DECRYPT_MODE, salt);
-			System.out.println("cipher: " + cipher);
+			//System.out.println("cipher: " + cipher);
 			try {
 				return cipher.doFinal(bytearray);
 			} catch (IllegalBlockSizeException | BadPaddingException e) {
@@ -113,27 +113,6 @@ public class Encryption {
 	}
 	
 	/**
-	 * 
-	 * @param rectangles
-	 * @param image
-	 * @return le nombre de pixels cryptés dans l'image
-	 */
-	private static int nbPixels(ArrayList<Rectangle> rectangles,BufferedImage image){
-		int nb=0;
-		for (int i = 0; i < image.getWidth(); i++) {
-			for (int j = 0; j < image.getHeight(); j++) {
-				for (Rectangle r : rectangles) {
-					if (r.contains(new Point(i, j))) {
-						nb += 1;
-						break;
-					}
-				}
-			}
-		}
-		return nb;
-	}
-	
-	/**
 	 * change les bytes en int et les utilise comme valeur rgb pour reremplir
 	 * @param rectangles
 	 * @param image
@@ -142,7 +121,7 @@ public class Encryption {
 	 */
 	static BufferedImage insertRectanglesInImage(ArrayList<Rectangle> rectangles, BufferedImage image, byte[] cryptedArray){
 		int index=0;
-		System.out.println("Changement du contenu de l'image");
+		//System.out.println("Changement du contenu de l'image");
 		Color couleur;
 		for (int i = 0; i < image.getWidth(); i++) {
 			for (int j = 0; j < image.getHeight(); j++) {
@@ -206,7 +185,7 @@ public class Encryption {
 	
 	public static boolean testGetPixels(ArrayList<Rectangle> r,BufferedImage image){
 		byte[] array=byteArrayFromSelectedRectangle(r,image);
-		BufferedImage i=insertRectanglesInImage(r, image, array);
-		return array.equals(i);
+		BufferedImage image2=insertRectanglesInImage(r, image, array);
+		return image.equals(image2);
 	}
 }

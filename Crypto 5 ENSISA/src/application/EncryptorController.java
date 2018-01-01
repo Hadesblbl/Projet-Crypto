@@ -93,14 +93,15 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 		//model.setImage(encryption.Encryption.test(model.getRectangles(),model.getImage(),"oui".toCharArray()));
 		//System.out.println(encryption.Encryption.testGetPixels(model.getRectangles(), model.getImage()));
 		if (!model.isCryptable())	return;
-
+		
 		model.setPassword();
 
-		BufferedImage encryptedIMG = encryption.Encryption.encryptImage(model.getRectangles(), model.getImage(), model.getPassword()); //L'image encryptée est celle qu'on a ouvert précédemment
+		BufferedImage encryptedIMG = encryption.Encryption.encryptImage(model.getRectangles(), model.getImage(), model.getPassword());
 		byte[] b;
 		
 		try {
-			b = CryptedImage.writeMetadata(model.getRectangles(), encryptedIMG);
+			//On met l'image+les datas des rectangles dans le fichier
+			b = CryptedImage.writeMetadata(model.getRectangles(), encryptedIMG); 
 			FileOutputStream fos = new FileOutputStream(model.getPath());
 			fos.write(b);//on remplace l'image courante par l'image cryptée
 			fos.close();
