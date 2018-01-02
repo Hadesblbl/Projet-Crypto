@@ -101,12 +101,9 @@ public class CryptedImage {
 
     	IIOMetadataNode textEntry = new IIOMetadataNode("TextEntry");
     	
-    	StringBuilder area = new StringBuilder();
-	    for(Rectangle rect : selectedAreas){
-	    	area.append(rect.toString());
-	    }
+    	
     	textEntry.setAttribute("keyword", "rect");
-    	textEntry.setAttribute("value", area.toString());
+    	textEntry.setAttribute("value", selectedAreas.toString());
 
 	    IIOMetadataNode text = new IIOMetadataNode("Text");
 	    text.appendChild(textEntry);
