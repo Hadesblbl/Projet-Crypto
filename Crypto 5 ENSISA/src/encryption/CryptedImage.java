@@ -31,6 +31,11 @@ public class CryptedImage {
 
 	private static final String STANDARD_METADATA_FORMAT = "javax_imageio_1.0";
     
+	/**
+	 * Décrit les rectangles dans un fichier
+	 * @param selectedAreas
+	 * @param image
+	 */
 	public static void writeMetadataInFile(List<Rectangle> selectedAreas, BufferedImage image){
 		try {
 			File f= new File("resources/metadata.txt");
@@ -45,6 +50,10 @@ public class CryptedImage {
 		}
 	}
 	
+	/**
+	 * Lis la description des rectangles cryptés dans le fichier
+	 * @return
+	 */
 	public static List<Rectangle> readMetadataInFile(){
 		try {
 			File f= new File("resources/metadata.txt");
@@ -75,6 +84,13 @@ public class CryptedImage {
 		return null;
 	}
 	
+	/**
+	 * Rajoute des metadonnées correspondant à selectedAreas dans image
+	 * @param selectedAreas
+	 * @param image
+	 * @return
+	 * @throws IOException
+	 */
 	public static byte[] writeMetadata(List<Rectangle> selectedAreas, BufferedImage image) throws IOException {
 		ImageWriter writer = ImageIO.getImageWritersByFormatName("png").next();
 	    ImageWriteParam writeParam = writer.getDefaultWriteParam();
@@ -104,6 +120,12 @@ public class CryptedImage {
 		return baos.toByteArray(); //contient l'image et ses metadata
 	}
 
+	/**
+	 * Récupère les métadonnées incluses dans l'image
+	 * @param imageData
+	 * @return
+	 * @throws IOException
+	 */
 	public static String readMetadata(byte[] imageData) throws IOException{
 		ImageReader imageReader = ImageIO.getImageReadersByFormatName("png").next();
 
