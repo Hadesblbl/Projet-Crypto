@@ -173,17 +173,17 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 			//regex
 			value[i].replace("[", " ");
 			value[i].replace("]", " ");
-			System.out.println(list[1]);
 			list = value[i].split("[=,]");
-			//obtention des valeurs
-			System.out.println(list[1]);
-			int x= Integer.parseInt(list[1]);
-			int y=Integer.parseInt(list[3]);
-			int width=Integer.parseInt(list[5]);
-			int height = Integer.parseInt(list[7].substring(0,list[7].indexOf("]")));
-			rekt.add(new Rectangle(x , y , width , height) );
+			if(list.length>=7){
+				//obtention des valeurs
+				int x= Integer.parseInt(list[1]);
+				int y=Integer.parseInt(list[3]);
+				int width=Integer.parseInt(list[5]);
+				int height = Integer.parseInt(list[7].substring(0,list[7].indexOf("]")));
+				rekt.add(new Rectangle(x , y , width , height) );
+			}
 		}
-		System.out.println( rekt.toString());
+		System.out.println(rekt.toString());
 		return rekt;
 	}
 
