@@ -123,15 +123,10 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 			model.setPassword();
 			
 			//Début de récupération de la liste des rectangles
-			ArrayList<Rectangle> rectCrypte= new ArrayList<>();
+			ArrayList<Rectangle> rectCrypte;
 			String list=CryptedImage.readMetadata(cryptedIMG);
-			if (list!=null){
-				//System.out.println(list);
-				String[] rect=list.split("\n");
-				for(String s:rect){
-					rectCrypte.add(stringToRect(s));
-				}
-			}
+			rectCrypte = stringToRect(list);
+
 			//Fin de récupération de la liste des rectangles
 			
 			//Début d'enregistrement de l'image
@@ -166,12 +161,26 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 	 * @param s contenant les 4 valeurs nécessaires pour faire le rectangle
 	 * @return le rectangle correspondant
 	 */
-	private Rectangle stringToRect(String s){
-		String[] value=s.split(" ");
-		if (value.length != 4){
-			return new Rectangle(0,0,0,0);
+	private ArrayList<Rectangle> stringToRect(String s){
+		ArrayList<Rectangle> rekt = new ArrayList<>();
+		String[] value=s.split("java.awt.Rectangle");
+		String[] list  = null;
+		for (int i = 0 ; i<value.length ; i++){
+			//regex
+			value[i].replace("[", " ");
+			value[i].replace("]", " ");
+			System.out.println(list[1]);
+			list = value[i].split("[=,]");
+			//obtention des valeurs
+			System.out.println(list[1]);
+			int x= Integer.parseInt(list[1]);
+			int y=Integer.parseInt(list[3]);
+			int width=Integer.parseInt(list[5]);
+			int height = Integer.parseInt(list[7].substring(0,list[7].indexOf("]")));
+			rekt.add(new Rectangle(x , y , width , height) );
 		}
-		return new Rectangle(Integer.parseInt(value[0]),Integer.parseInt(value[1]),Integer.parseInt(value[2]),Integer.parseInt(value[3]));
+		System.out.println( rekt.toString());
+		return rekt;
 	}
 
 	/**
