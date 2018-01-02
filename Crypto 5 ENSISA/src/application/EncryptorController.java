@@ -124,6 +124,10 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 				return;
 			byte[] cryptedIMG = fileToByte(model.getImageFile());
 			model.setPassword();
+
+			if (model.getPassword()==null){
+				return;
+			}
 			
 			//Début de récupération de la liste des rectangles
 			ArrayList<Rectangle> rectCrypte= new ArrayList<Rectangle>();
