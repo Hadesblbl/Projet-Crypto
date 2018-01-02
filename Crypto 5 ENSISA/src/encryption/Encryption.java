@@ -37,7 +37,7 @@ public class Encryption {
 			SecretKey key = keyFact.generateSecret(kSpecs); //On crée la clé secrète
 			SecretKey secret = new SecretKeySpec(key.getEncoded(), "AES");
 			
-			cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+			cipher = Cipher.getInstance("AES/CTR/PKCS5PADDING");
 			cipher.init(mode, secret, iv); //On crée et initialise le Cipher grâce à la clé
 			return cipher;
 
