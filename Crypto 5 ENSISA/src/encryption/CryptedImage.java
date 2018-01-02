@@ -29,7 +29,7 @@ import org.w3c.dom.NodeList;
 
 public class CryptedImage {
 
-	private static final String STANDARD_METADATA_FORMAT = "javax_imageio_1.0";
+	private static final String STANDARD_METADATA_FORMAT = IIOMetadataFormatImpl.standardMetadataFormatName;
     
 	/**
 	 * Décrit les rectangles dans un fichier
@@ -99,15 +99,21 @@ public class CryptedImage {
 	    //adding metadata
 	    IIOMetadata metadata = writer.getDefaultImageMetadata(typeSpecifier, writeParam);
 
-	    IIOMetadataNode text = new IIOMetadataNode("Text");
     	IIOMetadataNode textEntry = new IIOMetadataNode("TextEntry");
+    	
     	StringBuilder area = new StringBuilder();
 	    for(Rectangle rect : selectedAreas){
 	    	area.append(rect.toString());
 	    }
+    	textEntry.setAttribute("keyword", "rect");
     	textEntry.setAttribute("value", area.toString());
+
+	    IIOMetadataNode text = new IIOMetadataNode("Text");
+	    text.appendChild(textEntry);
+	    
 	    IIOMetadataNode root = new IIOMetadataNode(STANDARD_METADATA_FORMAT);
 	    root.appendChild(text);
+	    
 
 	    metadata.mergeTree(STANDARD_METADATA_FORMAT, root);
 
