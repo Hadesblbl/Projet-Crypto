@@ -61,6 +61,9 @@ public class EncryptorModel extends JPanel {
     	selectionRectangle=null;
     }
 
+    /**
+     * @return l'image enregistrée sous forme de fichier (File)
+     */
     public File getImageFile() {
         return this.imageFile;
     }
