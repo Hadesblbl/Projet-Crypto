@@ -33,7 +33,7 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 		this.model = view.getEncryptorModel();
 	}
 
-	/* Interaction menu */
+	/* --- Interaction menu --- */
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -164,6 +164,16 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 	}
 
 	/**
+	 * Retire les différents rectangles créés par sélection
+	 */
+	private void clearFile() {
+		model.clearRectangles();
+		model.repaint();
+	}
+
+	/* --- Autres --- */
+
+	/**
 	 * @param s contenant les 4 valeurs nécessaires pour faire le rectangle
 	 * @return le rectangle correspondant
 	 */
@@ -195,14 +205,6 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 			e.printStackTrace();
 		}
 		return cryptedImage;
-	}
-
-	/**
-	 * Retire les différents rectangles créés par sélection
-	 */
-	private void clearFile() {
-		model.clearRectangles();
-		model.repaint();
 	}
 
 	/* Interaction image */
