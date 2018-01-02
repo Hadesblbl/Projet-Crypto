@@ -83,19 +83,21 @@ public class CryptedImage {
 	    // read metadata of first image
 	    IIOMetadata metadata = imageReader.getImageMetadata(0);
 	    //this cast helps getting the contents
-	    String cryptedAreas = null;
 	    
 	    IIOMetadataNode nodes = (IIOMetadataNode) metadata.getAsTree(STANDARD_METADATA_FORMAT);
-	    for(int i=0;i<nodes.getLength();i++){
-	    	System.out.println(nodes.item(i).getNodeName());
-	    }
-	    if (nodes.getElementsByTagName("Text").getLength()>0){
-	    	IIOMetadataNode text = (IIOMetadataNode) nodes.getElementsByTagName("Text").item(0);
-	    	IIOMetadataNode data = (IIOMetadataNode) text.getElementsByTagName("TextEntry").item(0);
-	    	cryptedAreas=data.getAttribute("value");
-	    	System.out.println("metadata lues");
-	    }
 	    
-	    return cryptedAreas;
+	    if (nodes.getElementsByTagName("Text").getLength()>0){ // On regarde si on a écrit dans Text
+	    	IIOMetadataNode text = (IIOMetadataNode) nodes.getElementsByTagName("Text").item(0);
+	    	NodeList data = (NodeList) text.getElementsByTagName("TextEntry");
+	    	
+	    	for(int j=0;j<data.getLength();j++){
+	    		IIOMetadataNode reponse= (IIOMetadataNode) data.item(j);
+	    		if (reponse.getAttribute("keyword").equals("rect")){ //Si c'est nos metadata
+	    	    	System.out.println("metadata lues");
+	    		    return reponse.getAttribute("value");
+	    		}
+	    	}
+	    }
+	    return null;//Si on a pas trouvé les metadata
 	}
 }
