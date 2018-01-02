@@ -57,7 +57,6 @@ public class CryptedImage {
 	    
 	    IIOMetadataNode root = new IIOMetadataNode(STANDARD_METADATA_FORMAT);
 	    root.appendChild(text);
-	    
 
 	    metadata.mergeTree(STANDARD_METADATA_FORMAT, root);
 

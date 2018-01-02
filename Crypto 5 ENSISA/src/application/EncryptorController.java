@@ -127,6 +127,7 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 			
 			//Début de récupération de la liste des rectangles
 			ArrayList<Rectangle> rectCrypte= new ArrayList<Rectangle>();
+			ArrayList<Rectangle> rectCrypte;
 			String list=CryptedImage.readMetadata(cryptedIMG);
 			rectCrypte= stringToRect(list);
 			//Fin de récupération de la liste des rectangles
