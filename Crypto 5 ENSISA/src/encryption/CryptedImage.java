@@ -30,60 +30,7 @@ import org.w3c.dom.NodeList;
 public class CryptedImage {
 
 	private static final String STANDARD_METADATA_FORMAT = IIOMetadataFormatImpl.standardMetadataFormatName;
-    
-	/**
-	 * Décrit les rectangles dans un fichier
-	 * @param selectedAreas
-	 * @param image
-	 */
-	public static void writeMetadataInFile(List<Rectangle> selectedAreas, BufferedImage image){
-		try {
-			File f= new File("resources/metadata.txt");
-			FileOutputStream fos = new FileOutputStream(f.getAbsolutePath());
-			for(Rectangle r:selectedAreas){
-				String s=r.x+","+r.y+","+r.width+","+r.height+"\n";
-				fos.write(s.getBytes());
-			}
-			fos.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Lis la description des rectangles cryptés dans le fichier
-	 * @return
-	 */
-	public static List<Rectangle> readMetadataInFile(){
-		try {
-			File f= new File("resources/metadata.txt");
-			FileInputStream fos = new FileInputStream(f.getAbsolutePath());
-			int n;
-			int indice=0;
-			byte[] file= new byte[fos.available()];
-			while ((n=fos.read()) != -1){
-				file[indice]= (byte) n;
-				indice++;
-			}
-			fos.close();
-			
-			String infos=new String(file);
-			ArrayList<Rectangle> r= new ArrayList<>();
-			for(String s:infos.split("\n")){
-				String[] value=s.split(",");
-				int x=Integer.parseInt(value[0]);
-				int y=Integer.parseInt(value[1]);
-				int width=Integer.parseInt(value[2]);
-				int height=Integer.parseInt(value[3]);
-				r.add(new Rectangle(x,y,width,height));
-			}
-			return r;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
+
 	/**
 	 * Rajoute des metadonnées correspondant à selectedAreas dans image
 	 * @param selectedAreas

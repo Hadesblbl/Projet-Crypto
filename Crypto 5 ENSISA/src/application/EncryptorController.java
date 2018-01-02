@@ -63,14 +63,14 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 		JFileChooser fileChooser = new JFileChooser();
 		FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter(".png", "png");
 		fileChooser.setFileFilter(extensionFilter);
-		fileChooser.setDialogTitle("Ouvrir l'image PNG à crypter");
 
-		if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION && fileChooser.getSelectedFile()!= null){
+		if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION && fileChooser.getSelectedFile() != null){
 			model.setImageFile(new File(fileChooser.getSelectedFile().getAbsolutePath()));
 			model.addImage(model.getImageFile());
 			model.setPath(fileChooser.getSelectedFile().getAbsolutePath());
 			view.resizeFrame();
 		}
+
 		model.addMouseListener(this);
 		model.addMouseMotionListener(this);
 	}
@@ -84,34 +84,29 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 
 	/**
 	 * Lance le processus de cryptage de la zone d'image sélectionnée
-	 * Si aucune zone n'a été définie par l'utilisateur, la fonction ne
-	 * retournera rien
+	 * 1. On demande le mot de passe à l'utilisateur
+	 * 2. On crypte l'image
+	 * 3. L'image cryptée et les métadonnées associées (-> metainfo) sont enregistrées dans un fichier
+	 * 4. L'image courante est remplacée par l'image cryptée
 	 */
 	private void encryptFile() {
 		//System.out.println(encryption.Encryption.test2(model.getRectangles(),model.getImage(),"oui".toCharArray()));
 		//model.setImage(encryption.Encryption.test(model.getRectangles(),model.getImage(),"oui".toCharArray()));
-		//System.out.println(encryption.Encryption.testGetPixels(model.getRectangles(), model.getImage()));
 		if (!model.isCryptable())	return;
-		
 		model.setPassword();
-		if (model.getPassword()==null){
-			return;
-		}
 			
-		BufferedImage encryptedIMG = encryption.Encryption.encryptImage(model.getRectangles(), model.getImage(), model.getPassword());
-		byte[] b;
+		BufferedImage encryptedImage = encryption.Encryption.encryptImage(model.getRectangles(), model.getImage(), model.getPassword());
 		
 		try {
-			//On met l'image+les datas des rectangles dans le fichier
-			b = CryptedImage.writeMetadata(model.getRectangles(), encryptedIMG); 
+			byte[] metainfo = CryptedImage.writeMetadata(model.getRectangles(), encryptedImage);
 			FileOutputStream fos = new FileOutputStream(model.getPath());
-			fos.write(b);//on remplace l'image courante par l'image cryptée
+			fos.write(metainfo);
 			fos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		clearFile();
+		this.clearFile();
 		model.repaint();
 	}
 	
@@ -235,7 +230,7 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (model.getSelectionRectangle()!=null)
+		if (model.getSelectionRectangle() != null)
 			model.addRectangle(model.getSelectionRectangle());
 		model.setSelectionRectangle(null);
 	}
