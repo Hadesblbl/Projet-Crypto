@@ -31,8 +31,11 @@ public class PopUp{
 	 */
 	static char[] PopupIdentification() {
 		String reponse = JOptionPane.showInputDialog(null,"Veuillez entrer votre mot de passe","Identification",JOptionPane.QUESTION_MESSAGE);
-	    JOptionPane.showMessageDialog(null, "Votre mot de passe est " + reponse, "Identité", JOptionPane.INFORMATION_MESSAGE);
-	    return reponse.toCharArray();
+	    if (reponse != null){
+	    	JOptionPane.showMessageDialog(null, "Votre mot de passe est " + reponse, "Identité", JOptionPane.INFORMATION_MESSAGE);
+	    	return reponse.toCharArray();
+	    }
+	    return null;
 	}
 }
 
