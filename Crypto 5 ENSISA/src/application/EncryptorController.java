@@ -65,13 +65,13 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 		fileChooser.setFileFilter(extensionFilter);
 		fileChooser.setDialogTitle("Ouvrir l'image PNG à crypter");
 
-		if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION){
+		if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION && fileChooser.getSelectedFile() != null){
 			model.setImageFile(new File(fileChooser.getSelectedFile().getAbsolutePath()));
 			model.addImage(model.getImageFile());
 			model.setPath(fileChooser.getSelectedFile().getAbsolutePath());
+			view.resizeFrame();
 		}
 
-		view.resizeFrame();
 		model.addMouseListener(this);
 		model.addMouseMotionListener(this);
 	}
