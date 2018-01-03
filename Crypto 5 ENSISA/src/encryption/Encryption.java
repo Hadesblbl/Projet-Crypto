@@ -22,19 +22,20 @@ public class Encryption {
 	private final static byte[] salt = { (byte) 0x32, (byte) 0x11, (byte) 0xA2, (byte) 0x3C, (byte) 0x43, (byte) 0xA2, (byte) 0xE1, (byte) 0x23 };
 
 	/**
+	 * On crée la clé secrète avec l'algorithme AES et une clé créée à partir du mot de passe puis on renvoie le Cipher l'utilisant avec l'instance AES/CTR/NoPadding
 	 * @param password mdp
 	 * @param mode (Cipher.ENCRYPT_MODE ou Cipher.DECRYPT_MODE selon l'utilisation)
 	 * @param salt sel
 	 * @return
 	 */
-	private static Cipher getCipher(char[] password, int mode, byte[] salt) { //Pareil que l'autre Cipher mais on a pas besoin d'instance de la classe pour l'utiliser
+	private static Cipher getCipher(char[] password, int mode, byte[] salt) {
 		try {
 			Cipher cipher;
 			
 			IvParameterSpec iv = new IvParameterSpec("testTestTestTest".getBytes("UTF-8"));
-			SecretKeyFactory keyFact = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");//"PBEWithMD5AndDES"
+			SecretKeyFactory keyFact = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
 			PBEKeySpec kSpecs = new PBEKeySpec(password,salt, 65536, 128);
-			SecretKey key = keyFact.generateSecret(kSpecs); //On crée la clé secrète
+			SecretKey key = keyFact.generateSecret(kSpecs);
 			SecretKey secret = new SecretKeySpec(key.getEncoded(), "AES");
 			
 			cipher = Cipher.getInstance("AES/CTR/NoPADDING");
@@ -49,7 +50,7 @@ public class Encryption {
 	}
 	
 	/**
-	 * encrypte bytearray
+	 * encrypte bytearray à l'aide d'un Cipher
 	 * @param password
 	 * @param bytearray
 	 * @return 
@@ -70,7 +71,7 @@ public class Encryption {
 	
 	
 	/**
-	 * Utilise Cipher en DECRYPT_MODE
+	 * décrypte bytearray à l'aide de Cipher
 	 * @param password
 	 * @param bytearray
 	 * @return
@@ -87,7 +88,7 @@ public class Encryption {
 		}
 	
 	/**
-	 * retourne un tableau de byte à partir des rectangles sélectionnés, tous les groupes de 3 bytes représentent 1 pixel
+	 * Retourne un tableau de byte à partir des rectangles sélectionnés, tous les groupes de 3 bytes représentent 1 pixel
 	 * @param rectangles
 	 * @param image
 	 * @return
@@ -113,7 +114,7 @@ public class Encryption {
 	}
 	
 	/**
-	 * change les bytes en int et les utilise comme valeur rgb pour reremplir
+	 * Récupère les bytes 3 par 3 pour reremplir les 3 valeurs des couleurs de l'image sur les rectangles cryptés
 	 * @param rectangles
 	 * @param image
 	 * @param cryptedArray
@@ -169,20 +170,23 @@ public class Encryption {
 	}
 	
 	/**
-	 * @param r
-	 * @param image
-	 * @param password
-	 * @return image normalement si le test se passe bien
+	 * Test de encryptImage et decryptImage
 	 */
 	public static BufferedImage test(ArrayList<Rectangle> r,BufferedImage image,char[] password){
 		return decryptImage(r,encryptImage(r,image,password),password);
 	}
 	
+	/**
+	 * Test de encrypt et decrypt
+	 */
 	public static boolean test2(ArrayList<Rectangle> r,BufferedImage image,char[] password){
 		byte[] array= byteArrayFromSelectedRectangle(r,image);
 		return array.equals(encrypt(password,decrypt(password,array)));
 	}
 	
+	/**
+	 * Test de byteArrayFromSelectedRectangle et insertRectanglesInImage
+	 */
 	public static boolean testGetPixels(ArrayList<Rectangle> r,BufferedImage image){
 		byte[] array=byteArrayFromSelectedRectangle(r,image);
 		BufferedImage image2=insertRectanglesInImage(r, image, array);

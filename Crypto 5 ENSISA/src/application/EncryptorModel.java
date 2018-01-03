@@ -164,9 +164,8 @@ public class EncryptorModel extends JPanel {
         g2.drawImage(getImage(), 0, 0, getImage().getWidth(), getImage().getHeight(), this);
 
         canvas.setPreferredSize(new Dimension(getImage().getWidth(), getImage().getHeight()));
-        JScrollPane sp = new JScrollPane(canvas);
+        //JScrollPane sp = new JScrollPane(canvas);
         setLayout(new BorderLayout());
-        //TODO: Code mis sous quarantaine parce que je sais pas comment gérer le repaint() (Olivier)
         //this.add(sp, BorderLayout.CENTER);
     }
     

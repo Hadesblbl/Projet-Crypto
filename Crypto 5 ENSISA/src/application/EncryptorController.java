@@ -115,8 +115,7 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 	}
 	
 	/**
-	 * Lance le processus de décryptage de la zone sélectionnée
-	 * (...)
+	 * Lance le processus de décryptage des zone sélectionnées et enregistre l'image décryptée à la place de celle qu'on a récupéré
 	 */
 	private void decryptFile() {
 		try {
@@ -161,6 +160,7 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 			
 			model.setImage(img);
 			view.resizeFrame();
+			model.repaint();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -168,8 +168,8 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 	}
 
 	/**
-	 * @param s contenant les 4 valeurs nécessaires pour faire le rectangle
-	 * @return le rectangle correspondant
+	 * @param s contenant la liste des rectangles
+	 * @return l'ArrayList<Rectangle> correspondant
 	 */
 	private ArrayList<Rectangle> stringToRect(String s){
 		ArrayList<Rectangle> rekt = new ArrayList<Rectangle>();
@@ -177,8 +177,6 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 		String[] list  = null;
 		for (int i = 0 ; i<value.length ; i++){
 			//regex
-			value[i].replace("[", " ");
-			value[i].replace("]", " ");
 			list = value[i].split("[=,]");
 			if(list.length>=7){
 				//obtention des valeurs
@@ -194,7 +192,7 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 	}
 
 	/**
-	 * Recupère les bytes d'un file
+	 * Recupère les bytes d'un File
 	 */
 	private byte[] fileToByte(File file){
 		byte[] cryptedImage = null;
@@ -225,12 +223,6 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 
 	/* Interaction image */
 
-	/**
-	 * Met à jour les coordonnées du rectangle de sélection lorsque
-	 * l'utilisateur clique
-	 *
-	 * @param e événement de clic
-	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
@@ -246,6 +238,11 @@ class EncryptorController implements ActionListener, MouseListener, MouseMotionL
 		p1 = e.getPoint();
 	}
 
+
+	/** 
+	 * Ajoute le rectangle affiché à la liste des rectangles sélectionnés
+	 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (model.getSelectionRectangle()!=null)
