@@ -1,0 +1,43 @@
+Groupe 5 composé de:
+GELDREICH Bastien
+TINH Olivier
+GAUZIEDE Lucas
+EL MOUDEN Houda
+BEN ABDESSLEM Sirine
+
+Sujet : Faire une interface permettant de crypter/décrypter des parties d'une image (CPI)
+
+Bastien GELDREICH a fait:
+-Création de la clé secrète à partir du mot de passe
+-Récupération des pixels de l'image sélectionnés par les rectangles
+-Remplacement des pixels de l'image selon les métadatas
+-Recherche sur les métadatas des fichiers PNG
+-essai de correction des fonctions pour récupérer les métadatas
+-Javadoc
+
+Olivier TINH a fait:
+-Utilisation de la clé pour chiffrer avec Cipher
+-Le début de l'interface (JFrame, menus)
+-Mise en place du MVC
+-Javadoc
+-cleaning du code
+
+
+Lucas GAUZIEDE a fait:
+-Algorithme utilisant Cipher pour déchiffrer
+-Recherche pour l'ajout de scrollbars à l'image pour gérer les images trop grandes
+-Recherche sur les métadonnées
+-La gestion des métadata
+
+
+Houda EL MOUDEN a fait:
+-Utilisation des fonctions de cryptage
+-Recherche sur le Cipher et les algorithmes de chiffrage
+-Correction des fonctions de cryptage pour des méthodes sans padding
+-Recherche sur la façon d'agencer l'interface et les fonctions
+-Utilisation du MVC pour la sélection des rectangles
+
+
+Sirine BEN ABDESSLEM a fait:
+- recherche sur les méthodes PBE
+-Les fenêtres pour demander le mot de passe
