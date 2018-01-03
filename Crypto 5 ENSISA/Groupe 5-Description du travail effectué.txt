@@ -12,12 +12,12 @@ Bastien GELDREICH a fait:
 -Récupération des pixels de l'image sélectionnés par les rectangles
 -Remplacement des pixels de l'image selon les métadatas
 -Recherche sur les métadatas des fichiers PNG
--essai de correction des fonctions pour récupérer les métadatas
+-Essai de correction des fonctions pour récupérer les métadatas
 -Javadoc
 
 Olivier TINH a fait:
 -Utilisation de la clé pour chiffrer avec Cipher
--Le début de l'interface (JFrame, menus)
+-Mise en place de l'interface (JFrame, menus, boutons...)
 -Mise en place du MVC
 -Javadoc
 -cleaning du code
@@ -40,5 +40,5 @@ Houda EL MOUDEN a fait:
 
 
 Sirine BEN ABDESSLEM a fait:
-- recherche sur les méthodes PBE
+-Recherche sur les méthodes PBE
 -Les fenêtres pour demander le mot de passe
