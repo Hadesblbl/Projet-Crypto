@@ -36,6 +36,7 @@ Houda EL MOUDEN a fait:
 -Correction des fonctions de cryptage pour des méthodes sans padding
 -Recherche sur la façon d'agencer l'interface et les fonctions
 -Utilisation du MVC pour la sélection des rectangles
+-Javadoc html
 
 
 Sirine BEN ABDESSLEM a fait:
